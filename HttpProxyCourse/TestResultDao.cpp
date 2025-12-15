@@ -5,7 +5,7 @@
 #include <QDebug>
 
 bool TestResultDao::save(const TestResult& result) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in TestResultDao::save";
         return false;
@@ -31,14 +31,14 @@ bool TestResultDao::save(const TestResult& result) {
 QList<TestResult> TestResultDao::findByUserId(int userId) {
     QList<TestResult> results;
     
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in TestResultDao::findByUserId";
         return results;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT id, user_id, test_date, score, max_score FROM test_results WHERE user_id = ? ORDER BY test_date DESC");
+    query.prepare("SELECT id, user_id, test_date, score, max_score FROM test_results WHERE user_id  =  ? ORDER BY test_date DESC");
     query.addBindValue(userId);
     
     if (!query.exec()) {
@@ -48,11 +48,11 @@ QList<TestResult> TestResultDao::findByUserId(int userId) {
     
     while (query.next()) {
         TestResult result;
-        result.id = query.value("id").toInt();
-        result.userId = query.value("user_id").toInt();
-        result.testDate = query.value("test_date").toDateTime();
-        result.score = query.value("score").toInt();
-        result.maxScore = query.value("max_score").toInt();
+        result.id  =  query.value("id").toInt();
+        result.userId  =  query.value("user_id").toInt();
+        result.testDate  =  query.value("test_date").toDateTime();
+        result.score  =  query.value("score").toInt();
+        result.maxScore  =  query.value("max_score").toInt();
         results.append(result);
     }
     
@@ -62,7 +62,7 @@ QList<TestResult> TestResultDao::findByUserId(int userId) {
 QList<TestResult> TestResultDao::findAll() {
     QList<TestResult> results;
     
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in TestResultDao::findAll";
         return results;
@@ -78,11 +78,11 @@ QList<TestResult> TestResultDao::findAll() {
     
     while (query.next()) {
         TestResult result;
-        result.id = query.value("id").toInt();
-        result.userId = query.value("user_id").toInt();
-        result.testDate = query.value("test_date").toDateTime();
-        result.score = query.value("score").toInt();
-        result.maxScore = query.value("max_score").toInt();
+        result.id  =  query.value("id").toInt();
+        result.userId  =  query.value("user_id").toInt();
+        result.testDate  =  query.value("test_date").toDateTime();
+        result.score  =  query.value("score").toInt();
+        result.maxScore  =  query.value("max_score").toInt();
         results.append(result);
     }
     
@@ -92,7 +92,7 @@ QList<TestResult> TestResultDao::findAll() {
 TestResult TestResultDao::getBestResult(int userId) {
     TestResult bestResult;
     
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in TestResultDao::getBestResult";
         return bestResult;
@@ -102,7 +102,7 @@ TestResult TestResultDao::getBestResult(int userId) {
     query.prepare(R"(
         SELECT id, user_id, test_date, score, max_score 
         FROM test_results 
-        WHERE user_id = ? 
+        WHERE user_id  =  ? 
         ORDER BY (CAST(score AS FLOAT) / max_score) DESC, test_date DESC 
         LIMIT 1
     )");
@@ -114,18 +114,18 @@ TestResult TestResultDao::getBestResult(int userId) {
     }
     
     if (query.next()) {
-        bestResult.id = query.value("id").toInt();
-        bestResult.userId = query.value("user_id").toInt();
-        bestResult.testDate = query.value("test_date").toDateTime();
-        bestResult.score = query.value("score").toInt();
-        bestResult.maxScore = query.value("max_score").toInt();
+        bestResult.id  =  query.value("id").toInt();
+        bestResult.userId  =  query.value("user_id").toInt();
+        bestResult.testDate  =  query.value("test_date").toDateTime();
+        bestResult.score  =  query.value("score").toInt();
+        bestResult.maxScore  =  query.value("max_score").toInt();
     }
     
     return bestResult;
 }
 
 double TestResultDao::getAverageScore(int userId) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in TestResultDao::getAverageScore";
         return 0.0;
@@ -135,7 +135,7 @@ double TestResultDao::getAverageScore(int userId) {
     query.prepare(R"(
         SELECT AVG(CAST(score AS FLOAT) / max_score * 100) as avg_percentage 
         FROM test_results 
-        WHERE user_id = ? AND max_score > 0
+        WHERE user_id  =  ? AND max_score > 0
     )");
     query.addBindValue(userId);
     
@@ -152,14 +152,14 @@ double TestResultDao::getAverageScore(int userId) {
 }
 
 bool TestResultDao::deleteByUserId(int userId) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in TestResultDao::deleteByUserId";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("DELETE FROM test_results WHERE user_id = ?");
+    query.prepare("DELETE FROM test_results WHERE user_id  =  ?");
     query.addBindValue(userId);
     
     if (!query.exec()) {

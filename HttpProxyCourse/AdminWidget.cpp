@@ -7,20 +7,18 @@
 #include <QDebug>
 #include <QFont>
 
-// Константа для имени файла курса
-static const QString COURSE_DATA_FILE = "course.dat";
+static const QString COURSE_DATA_FILE  =  "course.dat";
 
 AdminWidget::AdminWidget(Course* course, QWidget* parent)
     : QWidget(parent)
     , m_course(course)
     , m_statisticsModel(nullptr)
-    , m_proxyModel(nullptr)
-{
-    // Критическая проверка: курс не может быть nullptr
+    , m_proxyModel(nullptr) {
+    
     if (!course) {
         QMessageBox::critical(this, "Критическая ошибка", 
                             "Не удалось инициализировать панель администратора: отсутствуют данные курса");
-        // Блокируем интерфейс при отсутствии данных
+        
         setEnabled(false);
         return;
     }
@@ -30,43 +28,39 @@ AdminWidget::AdminWidget(Course* course, QWidget* parent)
 }
 
 void AdminWidget::setCurrentUser(const User& user) {
-    m_currentUser = user;
+    m_currentUser  =  user;
     setupAccessRights();
 }
 
 void AdminWidget::setupUi() {
-    m_layout = new QVBoxLayout(this);
+    m_layout  =  new QVBoxLayout(this);
 
-    // Заголовок
-    QLabel* titleLabel = new QLabel("Панель Администратора", this);
-    QFont titleFont = titleLabel->font();
+    QLabel* titleLabel  =  new QLabel("Панель Администратора", this);
+    QFont titleFont  =  titleLabel->font();
     titleFont.setBold(true);
     titleFont.setPointSize(16);
     titleLabel->setFont(titleFont);
     titleLabel->setAlignment(Qt::AlignCenter);
     m_layout->addWidget(titleLabel);
 
-    // Создание вкладок
-    m_tabWidget = new QTabWidget(this);
+    m_tabWidget  =  new QTabWidget(this);
     m_tabWidget->addTab(createCourseEditTab(), "Редактирование курса");
     m_tabWidget->addTab(createStudentStatisticsTab(), "Статистика студентов");
     
     m_layout->addWidget(m_tabWidget);
 
-    // Кнопка выхода
-    m_btnLogout = new QPushButton("← Выйти", this);
+    m_btnLogout  =  new QPushButton("← Выйти", this);
     m_layout->addWidget(m_btnLogout);
 
-    // Подключение сигналов
     connect(m_btnLogout, &QPushButton::clicked, this, &AdminWidget::onLogoutClicked);
 }
 
 QWidget* AdminWidget::createCourseEditTab() {
-    QWidget* tab = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout(tab);
+    QWidget* tab  =  new QWidget();
+    QVBoxLayout* layout  =  new QVBoxLayout(tab);
 
-    m_lblHeader = new QLabel("Редактор Лекций", tab);
-    QFont font = m_lblHeader->font();
+    m_lblHeader  =  new QLabel("Редактор Лекций", tab);
+    QFont font  =  m_lblHeader->font();
     font.setBold(true);
     font.setPointSize(12);
     m_lblHeader->setFont(font);
@@ -74,18 +68,17 @@ QWidget* AdminWidget::createCourseEditTab() {
     layout->addWidget(m_lblHeader);
 
     layout->addWidget(new QLabel("Выберите тему для редактирования:", tab));
-    m_cbTopics = new QComboBox(tab);
+    m_cbTopics  =  new QComboBox(tab);
     layout->addWidget(m_cbTopics);
 
     layout->addWidget(new QLabel("HTML Контент (QTextBrowser совместимый):", tab));
-    m_txtHtmlEditor = new QTextEdit(tab);
+    m_txtHtmlEditor  =  new QTextEdit(tab);
     m_txtHtmlEditor->setAcceptRichText(false);
     layout->addWidget(m_txtHtmlEditor);
 
-    m_btnSave = new QPushButton("Сохранить изменения в файл", tab);
+    m_btnSave  =  new QPushButton("Сохранить изменения в файл", tab);
     layout->addWidget(m_btnSave);
 
-    // Подключение сигналов
     connect(m_cbTopics, QOverload<int>::of(&QComboBox::currentIndexChanged),
             this, &AdminWidget::onTopicChanged);
     connect(m_btnSave, &QPushButton::clicked, this, &AdminWidget::onSaveClicked);
@@ -94,33 +87,30 @@ QWidget* AdminWidget::createCourseEditTab() {
 }
 
 QWidget* AdminWidget::createStudentStatisticsTab() {
-    QWidget* tab = new QWidget();
-    QVBoxLayout* layout = new QVBoxLayout(tab);
+    QWidget* tab  =  new QWidget();
+    QVBoxLayout* layout  =  new QVBoxLayout(tab);
 
-    // Заголовок секции
-    QLabel* headerLabel = new QLabel("Статистика студентов", tab);
-    QFont headerFont = headerLabel->font();
+    QLabel* headerLabel  =  new QLabel("Статистика студентов", tab);
+    QFont headerFont  =  headerLabel->font();
     headerFont.setBold(true);
     headerFont.setPointSize(12);
     headerLabel->setFont(headerFont);
     headerLabel->setAlignment(Qt::AlignCenter);
     layout->addWidget(headerLabel);
 
-    // Панель фильтрации
-    QHBoxLayout* filterLayout = new QHBoxLayout();
+    QHBoxLayout* filterLayout  =  new QHBoxLayout();
     filterLayout->addWidget(new QLabel("Поиск по имени:", tab));
     
-    m_filterEdit = new QLineEdit(tab);
+    m_filterEdit  =  new QLineEdit(tab);
     m_filterEdit->setPlaceholderText("Введите имя студента для поиска...");
     filterLayout->addWidget(m_filterEdit);
     
-    m_btnRefreshStats = new QPushButton("🔄 Обновить", tab);
+    m_btnRefreshStats  =  new QPushButton("🔄 Обновить", tab);
     filterLayout->addWidget(m_btnRefreshStats);
     
     layout->addLayout(filterLayout);
 
-    // Таблица статистики
-    m_statisticsTable = new QTableView(tab);
+    m_statisticsTable  =  new QTableView(tab);
     m_statisticsTable->setAlternatingRowColors(true);
     m_statisticsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_statisticsTable->setSortingEnabled(true);
@@ -129,20 +119,17 @@ QWidget* AdminWidget::createStudentStatisticsTab() {
     
     layout->addWidget(m_statisticsTable);
 
-    // Инициализация моделей
-    m_statisticsModel = new QSqlQueryModel(this);
-    m_proxyModel = new QSortFilterProxyModel(this);
+    m_statisticsModel  =  new QSqlQueryModel(this);
+    m_proxyModel  =  new QSortFilterProxyModel(this);
     m_proxyModel->setSourceModel(m_statisticsModel);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_proxyModel->setFilterKeyColumn(1); // Фильтр по колонке "Полное имя"
+    m_proxyModel->setFilterKeyColumn(1); 
     
     m_statisticsTable->setModel(m_proxyModel);
 
-    // Подключение сигналов
     connect(m_filterEdit, &QLineEdit::textChanged, this, &AdminWidget::onFilterChanged);
     connect(m_btnRefreshStats, &QPushButton::clicked, this, &AdminWidget::onRefreshStatistics);
 
-    // Загрузка данных
     updateStudentStatistics();
 
     return tab;
@@ -167,7 +154,7 @@ void AdminWidget::loadTopics() {
 }
 
 void AdminWidget::onTopicChanged(int index) {
-    if (!m_course || index < 0 || index >= m_course->topics.size()) {
+    if (!m_course || index < 0 || index  >=  m_course->topics.size()) {
         m_txtHtmlEditor->clear();
         return;
     }
@@ -178,19 +165,19 @@ void AdminWidget::onTopicChanged(int index) {
 void AdminWidget::onSaveClicked() {
     if (!m_course) return;
 
-    int index = m_cbTopics->currentIndex();
-    if (index < 0 || index >= m_course->topics.size()) {
+    int index  =  m_cbTopics->currentIndex();
+    if (index < 0 || index  >=  m_course->topics.size()) {
         QMessageBox::warning(this, "Ошибка", "Нет выбранной темы для сохранения.");
         return;
     }
 
     try {
-        QString newContent = m_txtHtmlEditor->toPlainText();
+        QString newContent  =  m_txtHtmlEditor->toPlainText();
         if (newContent.trimmed().isEmpty()) {
             QMessageBox::warning(this, "Предупреждение", "Текст лекции пуст!");
             return;
         }
-        m_course->topics[index].htmlContent = newContent;
+        m_course->topics[index].htmlContent  =  newContent;
 
         Serializer::save(*m_course, COURSE_DATA_FILE);
         QMessageBox::information(this, "Успех", "Курс успешно сохранен и зашифрован!");
@@ -225,8 +212,7 @@ void AdminWidget::updateStudentStatistics() {
         return;
     }
 
-    // SQL запрос для получения статистики всех студентов с фильтрацией по фамилии
-    QString queryString = 
+    QString queryString  =  
         "SELECT "
             "u.id as \"ID\", "
             "u.full_name as \"Полное имя\", "
@@ -237,9 +223,9 @@ void AdminWidget::updateStudentStatistics() {
             "COALESCE(MAX(tr.test_date), 'Нет данных') as \"Последний тест\", "
             "COALESCE(p.last_topic_id, 0) as \"Последняя тема\" "
         "FROM users u "
-        "LEFT JOIN test_results tr ON u.id = tr.user_id "
-        "LEFT JOIN progress p ON u.id = p.user_id "
-        "WHERE u.role = 'student' "
+        "LEFT JOIN test_results tr ON u.id  =  tr.user_id "
+        "LEFT JOIN progress p ON u.id  =  p.user_id "
+        "WHERE u.role  =  'student' "
         "GROUP BY u.id, u.full_name, u.login, p.last_topic_id "
         "ORDER BY u.full_name";
 
@@ -250,7 +236,6 @@ void AdminWidget::updateStudentStatistics() {
         return;
     }
 
-    // Установка запроса в модель
     m_statisticsModel->setQuery(query);
     
     if (m_statisticsModel->lastError().isValid()) {
@@ -259,13 +244,11 @@ void AdminWidget::updateStudentStatistics() {
         return;
     }
 
-    // Настройка фильтра по фамилии (QSortFilterProxyModel)
     if (m_proxyModel) {
-        m_proxyModel->setFilterKeyColumn(1); // Колонка "Полное имя"
+        m_proxyModel->setFilterKeyColumn(1); 
         m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     }
 
-    // Настройка размеров колонок
     m_statisticsTable->resizeColumnsToContents();
     
     qDebug() << "Student statistics updated - found" << m_statisticsModel->rowCount() << "students";
@@ -274,14 +257,12 @@ void AdminWidget::updateStudentStatistics() {
 void AdminWidget::setupAccessRights() {
     if (!m_tabWidget) return;
     
-    // Проверяем права доступа к вкладке статистики
-    bool isAdmin = m_currentUser.isValid() && m_currentUser.isAdmin();
+    bool isAdmin  =  m_currentUser.isValid() && m_currentUser.isAdmin();
     
-    // Скрываем/показываем вкладку статистики в зависимости от роли
     if (m_tabWidget->count() > 1) {
-        m_tabWidget->setTabEnabled(1, isAdmin); // Вкладка статистики студентов
+        m_tabWidget->setTabEnabled(1, isAdmin); 
         if (!isAdmin) {
-            m_tabWidget->setCurrentIndex(0); // Переключаемся на первую вкладку
+            m_tabWidget->setCurrentIndex(0); 
         }
     }
     

@@ -7,8 +7,8 @@
 #include <QDebug>
 
 bool CourseDataConverter::convertJsonToBinary(const QString& jsonFilePath, const QString& binaryFilePath) {
-    // Парсим JSON файл
-    Course course = parseJsonFile(jsonFilePath);
+    
+    Course course  =  parseJsonFile(jsonFilePath);
     
     if (course.topics.isEmpty()) {
         qCritical() << "Failed to parse JSON file or course is empty:" << jsonFilePath;
@@ -16,7 +16,7 @@ bool CourseDataConverter::convertJsonToBinary(const QString& jsonFilePath, const
     }
     
     try {
-        // Сохраняем в бинарном формате
+        
         Serializer::save(course, binaryFilePath);
         qDebug() << "Successfully converted" << course.topics.size() << "topics from JSON to binary format";
         return true;
@@ -35,36 +35,36 @@ Course CourseDataConverter::parseJsonFile(const QString& jsonFilePath) {
         return course;
     }
     
-    QByteArray jsonData = file.readAll();
+    QByteArray jsonData  =  file.readAll();
     file.close();
     
     QJsonParseError parseError;
-    QJsonDocument doc = QJsonDocument::fromJson(jsonData, &parseError);
+    QJsonDocument doc  =  QJsonDocument::fromJson(jsonData, &parseError);
     
-    if (parseError.error != QJsonParseError::NoError) {
+    if (parseError.error  !=  QJsonParseError::NoError) {
         qCritical() << "JSON parse error:" << parseError.errorString();
         return course;
     }
     
-    QJsonObject rootObj = doc.object();
-    QJsonArray topicsArray = rootObj["topics"].toArray();
+    QJsonObject rootObj  =  doc.object();
+    QJsonArray topicsArray  =  rootObj["topics"].toArray();
     
     for (const QJsonValue& topicValue : topicsArray) {
-        QJsonObject topicObj = topicValue.toObject();
+        QJsonObject topicObj  =  topicValue.toObject();
         
         Topic topic;
-        topic.title = topicObj["title"].toString();
-        topic.htmlContent = topicObj["htmlContent"].toString();
+        topic.title  =  topicObj["title"].toString();
+        topic.htmlContent  =  topicObj["htmlContent"].toString();
         
-        QJsonArray questionsArray = topicObj["questions"].toArray();
+        QJsonArray questionsArray  =  topicObj["questions"].toArray();
         for (const QJsonValue& questionValue : questionsArray) {
-            QJsonObject questionObj = questionValue.toObject();
+            QJsonObject questionObj  =  questionValue.toObject();
             
             Question question;
-            question.text = questionObj["text"].toString();
-            question.correctIndex = questionObj["correctIndex"].toInt();
+            question.text  =  questionObj["text"].toString();
+            question.correctIndex  =  questionObj["correctIndex"].toInt();
             
-            QJsonArray variantsArray = questionObj["variants"].toArray();
+            QJsonArray variantsArray  =  questionObj["variants"].toArray();
             for (const QJsonValue& variantValue : variantsArray) {
                 question.variants.append(variantValue.toString());
             }

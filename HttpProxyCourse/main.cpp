@@ -1,3 +1,8 @@
+/**
+ * Реализация функций и методов для системы HTTP Proxy Course.
+ * Файл содержит основную логику работы компонентов приложения.
+ */
+
 #include "mainwindow.h"
 #include "Serializer.h"
 #include "CourseDataConverter.h"
@@ -7,17 +12,25 @@
 #include <QFile>
 #include <QDebug>
 
-int main(int argc, char *argv[])
-{
+/**
+ * Главная точка входа в приложение HTTP Proxy Course.
+ * Инициализирует систему логирования, проверяет наличие данных курса,
+ * подключается к базе данных и запускает главное окно приложения.
+ *
+ * @param argc Количество аргументов командной строки.
+ * @param argv Массив аргументов командной строки.
+ * @return Код завершения приложения.
+ */
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     
     // Инициализация системы логирования
     Logger::setFileLogging(true, "application.log");
     Logger::info("Запуск приложения HTTP Proxy Course", "Main");
     
-    // Проверяем наличие бинарного файла данных курса и создаем его при необходимости
     const QString courseDataFile = "course.dat";
     
+    // Проверка наличия файла данных курса и создание при необходимости
     if (!QFile::exists(courseDataFile)) {
         qDebug() << "Course data file not found. Generating binary course data...";
         try {
@@ -31,7 +44,7 @@ int main(int argc, char *argv[])
         qDebug() << "Binary course data file found:" << courseDataFile;
     }
     
-    // Инициализация базы данных
+    // Инициализация подключения к базе данных
     DatabaseManager& dbManager = DatabaseManager::instance();
     if (!dbManager.connectDb()) {
         qCritical() << "Failed to connect to database. Application will continue with limited functionality.";
