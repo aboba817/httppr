@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл StudentProfileWidget.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -18,55 +14,96 @@
 #include <QGridLayout>
 #include <QSqlQuery>
 
-/**
- * Виджет профиля студента с информацией о прогрессе.
+/*!
+ * @brief Реализует функциональность класса StudentProfileWidget
  */
 class StudentProfileWidget : public QWidget {
     Q_OBJECT
 
 public:
     
-    explicit StudentProfileWidget(QWidget *parent  =  nullptr);
+/*!
+ * @brief Возвращает значение
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
+    explicit StudentProfileWidget(QWidget* parent  =  nullptr);
 
+/*!
+ * @brief Устанавливает значение
+ * @param user Входной параметр
+ */
     void setCurrentUser(const User& user);
 
+/*!
+ * @brief Устанавливает значение
+ * @param user Входной параметр
+ */
     void setUser(const User& user);
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void refreshData();
 
+/*!
+ * @brief Устанавливает значение
+ * @param model Входной параметр
+ */
     void setResultsModel(QAbstractItemModel* model);
 
 signals:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void backRequested();
 
 private slots:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onBackClicked();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onRefreshClicked();
 
 private:
     
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createUserInfoSection();
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createStatisticsSection();
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createTestHistorySection();
 
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateUserInfo();
 
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateStatistics();
 
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateTestHistory();
 
     User m_currentUser;

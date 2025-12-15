@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл mainwindow.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -21,72 +17,105 @@
 #include <QAction>
 #include <QDebug>
 
-/**
- * Главное окно приложения с основным интерфейсом пользователя.
+/*!
+ * @brief Реализует функциональность класса MainWindow
  */
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
 public:
     
-    explicit MainWindow(QWidget *parent  =  nullptr);
+/*!
+ * @brief Выполняет основную операцию
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
+    explicit MainWindow(QWidget* parent  =  nullptr);
 
     ~MainWindow();
 
 private slots:
     
-    /**
-     * Обрабатывает событие или сигнал.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleStudentStart();
 
-    /**
-     * Обрабатывает событие или сигнал.
-     */
+/*!
+ * @brief Обрабатывает событие
+ * @param user Входной параметр
+ */
     void handleUserAuthenticated(const User& user);
 
-    /**
-     * Обрабатывает событие или сигнал.
-     */
+/*!
+ * @brief Обрабатывает событие
+ * @param password Входной параметр
+ */
     void handleAdminLogin(const QString& password);
 
-    /**
-     * Обрабатывает событие или сигнал.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleLogout();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onAdminBackRequested();
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param index Входной параметр
+ */
     void onTopicSelected(int index);
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onStartTestRequested();
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param answerIndex Входной параметр
+ */
     void onAnswerSubmitted(int answerIndex);
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param score Входной параметр
+ * @param maxScore Входной параметр
+ * @param timeExpired Входной параметр
+ */
     void onTestFinished(int score, int maxScore, bool timeExpired);
 
-    /**
-     * Отображает элемент интерфейса.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void showAboutDialog();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onShowProfileRequested();
 
 private:
     
+/*!
+ * @brief Загружает данные
+ */
     void loadCourseData();
 
-    /**
-     * Настраивает компонент для работы.
-     */
+/*!
+ * @brief Устанавливает значение
+ */
     void setupMenu();
 
     SessionManager m_sessionManager;
-    QStackedWidget *m_stackedWidget;
-    LoginWidget *m_loginWidget;
-    TopicSelectionWidget *m_topicWidget;
-    TopicViewWidget *m_topicViewWidget;
-    TestWidget *m_testWidget;
-    AdminWidget *m_adminWidget;
-    StudentProfileWidget *m_studentProfileWidget;
+    QStackedWidget* m_stackedWidget;
+    LoginWidget* m_loginWidget;
+    TopicSelectionWidget* m_topicWidget;
+    TopicViewWidget* m_topicViewWidget;
+    TestWidget* m_testWidget;
+    AdminWidget* m_adminWidget;
+    StudentProfileWidget* m_studentProfileWidget;
 };

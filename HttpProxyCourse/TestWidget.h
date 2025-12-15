@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл TestWidget.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -16,72 +12,99 @@
 #include <QProgressBar>
 #include <QDateTime>
 
-/**
- * Виджет прохождения тестирования по выбранной теме.
+/*!
+ * @brief Реализует функциональность класса TestWidget
  */
 class TestWidget : public QWidget {
     Q_OBJECT
 
 public:
     
-    explicit TestWidget(QWidget *parent  =  nullptr);
+/*!
+ * @brief Возвращает значение
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
+    explicit TestWidget(QWidget* parent  =  nullptr);
 
-    /**
-     * Отображает элемент интерфейса.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @param question Входной параметр
+ */
     void showQuestion(const Question& question);
 
-    /**
-     * Возвращает числовое значение.
-     */
+/*!
+ * @brief Возвращает значение
+ * @return Результат выполнения
+ */
     int getSelectedVariantIndex();
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param questions Входной параметр
+ * @param user Входной параметр
+ * @param 20 Входной параметр
+ */
     void startTest(const QList<Question>& questions, const User& user, int timeLimit  =  20);
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void finishTest();
 
-    /**
-     * Возвращает числовое значение.
-     */
     int getCurrentScore() const;
 
-    /**
-     * Возвращает числовое значение.
-     */
     int getMaxScore() const;
 
 signals:
     
+/*!
+ * @brief Выполняет основную операцию
+ * @param index Входной параметр
+ */
     void answerSubmitted(int index);
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param score Входной параметр
+ * @param maxScore Входной параметр
+ * @param timeExpired Входной параметр
+ */
     void testFinished(int score, int maxScore, bool timeExpired);
 
 private slots:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onTimeExpired();
 
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateTimer();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onAnswerSubmitted();
 
 private:
     
-    /**
-     * Сохраняет данные в хранилище.
-     */
+/*!
+ * @brief Сохраняет данные
+ * @return Результат выполнения
+ */
     bool saveTestResult();
 
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateProgress();
 
-    /**
-     * Отображает элемент интерфейса.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void showNextQuestion();
 
     QLabel* questionLabel;

@@ -7,22 +7,22 @@
 UserProgress ProgressDao::findByUserId(int userId) {
     UserProgress progress;
     
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in ProgressDao::findByUserId";
         return progress;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT user_id, last_topic_id, updated_at FROM progress WHERE user_id  =  ?");
+    query.prepare("SELECT user_id, last_topic_id, updated_at FROM progress WHERE user_id  =  ?");  // Выполнение SQL запроса
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to execute findByUserId query:" << query.lastError().text();
         return progress;
     }
     
-    if (query.next()) {
+    if (query.next()) {  // Проверка условия
         progress.userId  =  query.value("user_id").toInt();
         progress.lastTopicId  =  query.value("last_topic_id").toInt();
         progress.updatedAt  =  query.value("updated_at").toDateTime();
@@ -32,8 +32,8 @@ UserProgress ProgressDao::findByUserId(int userId) {
 }
 
 bool ProgressDao::updateProgress(int userId, int topicId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in ProgressDao::updateProgress";
         return false;
     }
@@ -42,19 +42,19 @@ bool ProgressDao::updateProgress(int userId, int topicId) {
     
     QSqlQuery query(dbManager.database());
     
-    if (existing.userId > 0) {
+    if (existing.userId > 0) {  // Проверка условия
         
-        query.prepare("UPDATE progress SET last_topic_id  =  ?, updated_at  =  CURRENT_TIMESTAMP WHERE user_id  =  ?");
+        query.prepare("UPDATE progress SET last_topic_id  =  ?, updated_at  =  CURRENT_TIMESTAMP WHERE user_id  =  ?");  // Выполнение SQL запроса
         query.addBindValue(topicId);
         query.addBindValue(userId);
     } else {
         
-        query.prepare("INSERT INTO progress (user_id, last_topic_id, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)");
+        query.prepare("INSERT INTO progress (user_id, last_topic_id, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)");  // Выполнение SQL запроса
         query.addBindValue(userId);
         query.addBindValue(topicId);
     }
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to update progress:" << query.lastError().text();
         return false;
     }
@@ -64,18 +64,18 @@ bool ProgressDao::updateProgress(int userId, int topicId) {
 }
 
 bool ProgressDao::createProgress(int userId, int topicId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in ProgressDao::createProgress";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("INSERT INTO progress (user_id, last_topic_id, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)");
+    query.prepare("INSERT INTO progress (user_id, last_topic_id, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)");  // Выполнение SQL запроса
     query.addBindValue(userId);
     query.addBindValue(topicId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to create progress:" << query.lastError().text();
         return false;
     }
@@ -84,17 +84,17 @@ bool ProgressDao::createProgress(int userId, int topicId) {
 }
 
 bool ProgressDao::deleteByUserId(int userId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in ProgressDao::deleteByUserId";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("DELETE FROM progress WHERE user_id  =  ?");
+    query.prepare("DELETE FROM progress WHERE user_id  =  ?");  // Выполнение SQL запроса
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to delete progress:" << query.lastError().text();
         return false;
     }

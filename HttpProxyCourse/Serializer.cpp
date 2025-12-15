@@ -5,17 +5,27 @@
 #include <stdexcept>
 
 void Serializer::save(const Course& course, const QString& filePath) {
+/*!
+ * @brief Выполняет основную операцию
+ * @param filePath Входной параметр
+ * @return Результат выполнения
+ */
     QFile file(filePath);
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::WriteOnly)) {  // Проверка условия
         throw std::runtime_error("Cannot open file for writing: " + filePath.toStdString());
     }
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param file Входной параметр
+ * @return Результат выполнения
+ */
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_5_15);
 
     stream << course;
 
-    if (stream.status()  !=  QDataStream::Ok) {
+    if (stream.status()  !=  QDataStream::Ok) {  // Проверка условия
         throw std::runtime_error("Failed to serialize course data to: " + filePath.toStdString());
     }
     
@@ -23,22 +33,32 @@ void Serializer::save(const Course& course, const QString& filePath) {
 }
 
 Course Serializer::load(const QString& filePath) {
+/*!
+ * @brief Выполняет основную операцию
+ * @param filePath Входной параметр
+ * @return Результат выполнения
+ */
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly)) {  // Проверка условия
         throw std::runtime_error("Cannot open file for reading: " + filePath.toStdString());
     }
 
-    if (file.size()  ==  0) {
+    if (file.size()  ==  0) {  // Проверка условия
         throw std::runtime_error("File is empty: " + filePath.toStdString());
     }
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param file Входной параметр
+ * @return Результат выполнения
+ */
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_5_15);
 
     Course course;
     stream >> course;
 
-    if (stream.status()  !=  QDataStream::Ok) {
+    if (stream.status()  !=  QDataStream::Ok) {  // Проверка условия
         throw std::runtime_error("Failed to deserialize course data from: " + filePath.toStdString());
     }
 

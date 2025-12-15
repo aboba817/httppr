@@ -1,8 +1,3 @@
-/**
- * Заголовочный файл AppController.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
-
 #pragma once
 
 #include <QObject>
@@ -12,183 +7,183 @@
 #include "CourseModel.h"
 #include "SessionManager.h"
 
+/*!
+ * @brief Реализует функциональность класса LoginWidget
+ */
 class LoginWidget;
+/*!
+ * @brief Реализует функциональность класса TopicSelectionWidget
+ */
 class TopicSelectionWidget;
+/*!
+ * @brief Реализует функциональность класса TopicViewWidget
+ */
 class TopicViewWidget;
+/*!
+ * @brief Реализует функциональность класса TestWidget
+ */
 class TestWidget;
+/*!
+ * @brief Реализует функциональность класса AdminWidget
+ */
 class AdminWidget;
+/*!
+ * @brief Реализует функциональность класса StudentProfileWidget
+ */
 class StudentProfileWidget;
 
-/**
- * Главный контроллер приложения, управляющий навигацией между экранами и координацией работы компонентов.
- * Реализует паттерн MVC, обеспечивая связь между моделями данных и представлениями.
+/*!
+ * @brief Реализует функциональность класса AppController
  */
 class AppController : public QObject {
     Q_OBJECT
 
 public:
-    /**
-     * Конструктор контроллера приложения.
-     *
-     * @param stackedWidget Виджет для управления экранами приложения.
-     * @param parent Родительский объект для управления памятью.
-     */
+    
+/*!
+ * @brief Выполняет основную операцию
+ * @param stackedWidget Входной параметр
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
     explicit AppController(QStackedWidget* stackedWidget, QObject* parent = nullptr);
 
-    /**
-     * Инициализирует контроллер и загружает необходимые данные.
-     *
-     * @return true если инициализация прошла успешно, false в противном случае.
-     */
+/*!
+ * @brief Инициализирует компонент
+ * @return Результат выполнения
+ */
     bool initialize();
 
-    /**
-     * Возвращает указатель на модель данных курса.
-     *
-     * @return Указатель на объект CourseModel.
-     */
     CourseModel* getCourseModel() const { return m_courseModel; }
 
-    /**
-     * Возвращает указатель на модель результатов тестирования.
-     *
-     * @return Указатель на объект TestResultsModel.
-     */
     TestResultsModel* getTestResultsModel() const { return m_testResultsModel; }
 
 public slots:
-    /**
-     * Обрабатывает успешную аутентификацию пользователя в системе.
-     *
-     * @param user Объект пользователя с данными аутентификации.
-     */
+    
+/*!
+ * @brief Обрабатывает событие
+ * @param user Входной параметр
+ */
     void handleUserAuthenticated(const User& user);
 
-    /**
-     * Обрабатывает выход пользователя из системы.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleLogout();
 
-    /**
-     * Обрабатывает выбор темы для изучения студентом.
-     *
-     * @param topicIndex Индекс выбранной темы в списке курса.
-     */
+/*!
+ * @brief Обрабатывает событие
+ * @param topicIndex Входной параметр
+ */
     void handleTopicSelected(int topicIndex);
 
-    /**
-     * Обрабатывает запуск процедуры тестирования.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleStartTest();
 
-    /**
-     * Обрабатывает отправку ответа на вопрос теста.
-     *
-     * @param answerIndex Индекс выбранного варианта ответа.
-     */
+/*!
+ * @brief Обрабатывает событие
+ * @param answerIndex Входной параметр
+ */
     void handleAnswerSubmitted(int answerIndex);
 
-    /**
-     * Обрабатывает запрос на отображение профиля студента.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleShowProfile();
 
-    /**
-     * Обрабатывает обновление прогресса изучения материала.
-     *
-     * @param topicIndex Индекс изученной темы.
-     */
+/*!
+ * @brief Обрабатывает событие
+ * @param topicIndex Входной параметр
+ */
     void handleProgressUpdate(int topicIndex);
 
-    /**
-     * Обрабатывает возврат из административной панели.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleAdminBack();
 
-    /**
-     * Обрабатывает истечение времени, отведенного на тестирование.
-     */
+/*!
+ * @brief Обрабатывает событие
+ */
     void handleTestTimeout();
 
 signals:
-    /**
-     * Сигнал об ошибке в работе контроллера.
-     *
-     * @param errorMessage Текст сообщения об ошибке.
-     */
+    
+/*!
+ * @brief Выполняет основную операцию
+ * @param errorMessage Входной параметр
+ */
     void errorOccurred(const QString& errorMessage);
 
-    /**
-     * Сигнал о необходимости показать сообщение пользователю.
-     *
-     * @param title Заголовок сообщения.
-     * @param message Текст сообщения.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @param title Входной параметр
+ * @param message Входной параметр
+ */
     void showMessage(const QString& title, const QString& message);
 
 private slots:
-    /**
-     * Обрабатывает ошибки модели данных курса.
-     *
-     * @param errorMessage Текст сообщения об ошибке.
-     */
+    
+/*!
+ * @brief Обрабатывает событие
+ * @param errorMessage Входной параметр
+ */
     void handleCourseModelError(const QString& errorMessage);
 
-    /**
-     * Обрабатывает ошибки модели результатов тестирования.
-     *
-     * @param errorMessage Текст сообщения об ошибке.
-     */
+/*!
+ * @brief Обрабатывает событие
+ * @param errorMessage Входной параметр
+ */
     void handleTestResultsError(const QString& errorMessage);
 
 private:
-    /**
-     * Создает и настраивает все виджеты приложения.
-     */
+    
+/*!
+ * @brief Устанавливает значение
+ */
     void setupViews();
 
-    /**
-     * Подключает сигналы и слоты между компонентами системы.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void connectSignals();
 
-    /**
-     * Переключает отображение на указанный виджет.
-     *
-     * @param widget Виджет для отображения.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @param widget Входной параметр
+ */
     void switchToView(QWidget* widget);
 
-    /**
-     * Начинает новый тест для текущего пользователя.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void startNewTest();
 
-    /**
-     * Завершает текущий тест и сохраняет результат.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void finishTest();
 
-    /**
-     * Отображает следующий вопрос в текущем тесте.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void showNextQuestion();
 
-    /**
-     * Сохраняет прогресс студента в базе данных.
-     *
-     * @param userId Идентификатор пользователя.
-     * @param topicId Идентификатор последней изученной темы.
-     * @return true если сохранение прошло успешно, false в противном случае.
-     */
+/*!
+ * @brief Сохраняет данные
+ * @param userId Входной параметр
+ * @param topicId Входной параметр
+ * @return Результат выполнения
+ */
     bool saveStudentProgress(int userId, int topicId);
 
-    /**
-     * Загружает прогресс студента из базы данных.
-     *
-     * @param userId Идентификатор пользователя.
-     * @return Идентификатор последней изученной темы или -1 при ошибке.
-     */
+/*!
+ * @brief Загружает данные
+ * @param userId Входной параметр
+ * @return Результат выполнения
+ */
     int loadStudentProgress(int userId);
 
     CourseModel* m_courseModel;
@@ -207,5 +202,5 @@ private:
     int m_correctAnswers;
     QList<int> m_userAnswers;
 
-    static const int TEST_TIME_LIMIT_MS = 300000;  // 5 минут на тест
+    static const int TEST_TIME_LIMIT_MS = 300000;  
 };

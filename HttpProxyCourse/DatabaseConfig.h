@@ -1,24 +1,25 @@
-/**
- * Заголовочный файл DatabaseConfig.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
 #include <QString>
 #include <QSettings>
 
-/**
- * Конфигурация подключения к базе данных.
+/*!
+ * @brief Реализует функциональность класса DatabaseConfig
  */
 class DatabaseConfig {
 public:
     
-    /**
-     * Возвращает единственный экземпляр класса (Singleton).
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     static DatabaseConfig& instance();
 
+/*!
+ * @brief Загружает данные
+ * 
+ */
     void loadConfig(const QString& configPath  =  "config.ini");
 
     QString hostName() const { return m_hostName; }
@@ -38,6 +39,10 @@ private:
     DatabaseConfig(const DatabaseConfig&)  =  delete;
     DatabaseConfig& operator = (const DatabaseConfig&)  =  delete;
 
+/*!
+ * @brief Создает объект
+ * @param configPath Входной параметр
+ */
     void createDefaultConfig(const QString& configPath);
 
     QString m_hostName;      

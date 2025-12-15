@@ -18,12 +18,18 @@ DatabaseConfig& DatabaseConfig::instance() {
 
 void DatabaseConfig::loadConfig(const QString& configPath) {
     
-    if (!QFile::exists(configPath)) {
+    if (!QFile::exists(configPath)) {  // Проверка условия
         qWarning() << "Файл конфигурации не найден:" << configPath;
         qWarning() << "Создаем файл конфигурации по умолчанию...";
         createDefaultConfig(configPath);
     }
 
+/*!
+ * @brief Устанавливает значение
+ * @param configPath Входной параметр
+ * @param QSettings::IniFormat Параметр функции
+ * @return Результат выполнения
+ */
     QSettings settings(configPath, QSettings::IniFormat);
     
     settings.beginGroup("Database");
@@ -39,6 +45,12 @@ void DatabaseConfig::loadConfig(const QString& configPath) {
 }
 
 void DatabaseConfig::createDefaultConfig(const QString& configPath) {
+/*!
+ * @brief Устанавливает значение
+ * @param configPath Входной параметр
+ * @param QSettings::IniFormat Параметр функции
+ * @return Результат выполнения
+ */
     QSettings settings(configPath, QSettings::IniFormat);
     
     settings.beginGroup("Database");

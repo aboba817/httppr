@@ -1,7 +1,3 @@
-/**
- * Реализация функций и методов для системы HTTP Proxy Course.
- * Файл содержит основную логику работы компонентов приложения.
- */
 
 #include "DatabaseManager.h"
 #include <QSqlQuery>
@@ -10,42 +6,44 @@
 #include <QCryptographicHash>
 #include <QMutexLocker>
 
-DatabaseManager::DatabaseManager() : m_connected(false) {
-    // Инициализация драйвера PostgreSQL
+DatabaseManager::DatabaseManager() : m_connected(false) {  // Работа с базой данных
+    
     m_database = QSqlDatabase::addDatabase("QPSQL");
 }
 
-DatabaseManager::~DatabaseManager() {
-    if (m_database.isOpen()) {
+DatabaseManager::~DatabaseManager() {  // Работа с базой данных
+    if (m_database.isOpen()) {  // Проверка условия
         m_database.close();
     }
 }
 
-DatabaseManager& DatabaseManager::instance() {
+DatabaseManager& DatabaseManager::instance() {  // Работа с базой данных
     static DatabaseManager instance;
     return instance;
 }
 
-bool DatabaseManager::connectDb() {
-    QMutexLocker locker(&m_mutex);  // Потокобезопасность
+bool DatabaseManager::connectDb() {  // Работа с базой данных
+/*!
+ * @brief Выполняет основную операцию
+ * @param m_mutex Входной параметр
+ * @return Результат выполнения
+ */
+    QMutexLocker locker(&m_mutex);  
     
-    // Проверка существующего подключения
-    if (m_connected && m_database.isOpen()) {
+    if (m_connected && m_database.isOpen()) {  // Проверка условия
         return true;
     }
 
-    // Загрузка конфигурации подключения
     DatabaseConfig& config = DatabaseConfig::instance();
     config.loadConfig();
 
-    // Настройка параметров подключения
     m_database.setHostName(config.hostName());
     m_database.setDatabaseName(config.databaseName());
     m_database.setUserName(config.userName());
     m_database.setPassword(config.password());
     m_database.setPort(config.port());
 
-    if (!m_database.open()) {
+    if (!m_database.open()) {  // Проверка условия
         qCritical() << "Failed to connect to database:" << m_database.lastError().text();
         m_connected = false;
         return false;
@@ -56,18 +54,18 @@ bool DatabaseManager::connectDb() {
     return true;
 }
 
-bool DatabaseManager::initSchema() {
-    if (!isConnected()) {
+bool DatabaseManager::initSchema() {  // Работа с базой данных
+    if (!isConnected()) {  // Проверка условия
         qWarning() << "Cannot initialize schema: database not connected";
         return false;
     }
 
-    if (!createTables()) {
+    if (!createTables()) {  // Проверка условия
         qCritical() << "Failed to create database tables";
         return false;
     }
 
-    if (!seedData()) {
+    if (!seedData()) {  // Проверка условия
         qCritical() << "Failed to seed initial data";
         return false;
     }
@@ -76,15 +74,20 @@ bool DatabaseManager::initSchema() {
     return true;
 }
 
-bool DatabaseManager::isConnected() const {
+bool DatabaseManager::isConnected() const {  // Работа с базой данных
     return m_connected && m_database.isOpen();
 }
 
-QSqlDatabase& DatabaseManager::database() {
+QSqlDatabase& DatabaseManager::database() {  // Работа с базой данных
     return m_database;
 }
 
-bool DatabaseManager::createTables() {
+bool DatabaseManager::createTables() {  // Работа с базой данных
+/*!
+ * @brief Выполняет основную операцию
+ * @param m_database Входной параметр
+ * @return Результат выполнения
+ */
     QSqlQuery query(m_database);
 
     QString createUsersTable  =  R"(
@@ -97,7 +100,7 @@ bool DatabaseManager::createTables() {
         )
     )";
 
-    if (!query.exec(createUsersTable)) {
+    if (!query.exec(createUsersTable)) {  // Проверка условия
         qCritical() << "Failed to create users table:" << query.lastError().text();
         return false;
     }
@@ -111,7 +114,7 @@ bool DatabaseManager::createTables() {
         )
     )";
 
-    if (!query.exec(createProgressTable)) {
+    if (!query.exec(createProgressTable)) {  // Проверка условия
         qCritical() << "Failed to create progress table:" << query.lastError().text();
         return false;
     }
@@ -126,7 +129,7 @@ bool DatabaseManager::createTables() {
         )
     )";
 
-    if (!query.exec(createTestResultsTable)) {
+    if (!query.exec(createTestResultsTable)) {  // Проверка условия
         qCritical() << "Failed to create test_results table:" << query.lastError().text();
         return false;
     }
@@ -135,22 +138,27 @@ bool DatabaseManager::createTables() {
     return true;
 }
 
-bool DatabaseManager::seedData() {
+bool DatabaseManager::seedData() {  // Работа с базой данных
+/*!
+ * @brief Выполняет основную операцию
+ * @param m_database Входной параметр
+ * @return Результат выполнения
+ */
     QSqlQuery query(m_database);
 
-    if (!query.exec("SELECT COUNT(*) FROM users")) {
+    if (!query.exec("SELECT COUNT(*) FROM users")) {  // Проверка условия
         qCritical() << "Failed to check users table:" << query.lastError().text();
         return false;
     }
 
-    if (query.next() && query.value(0).toInt() > 0) {
+    if (query.next() && query.value(0).toInt() > 0) {  // Проверка условия
         qDebug() << "Users table already contains data, skipping seeding";
         return true;
     }
 
     QString adminPasswordHash  =  calculateSha256("admin");
     
-    query.prepare(R"(
+    query.prepare(R"(  // Выполнение SQL запроса
         INSERT INTO users (login, password_hash, full_name, role) 
         VALUES (?, ?, ?, ?)
     )");
@@ -160,7 +168,7 @@ bool DatabaseManager::seedData() {
     query.addBindValue("System Administrator");
     query.addBindValue("admin");
 
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to insert default admin user:" << query.lastError().text();
         return false;
     }
@@ -170,7 +178,7 @@ bool DatabaseManager::seedData() {
     return true;
 }
 
-QString DatabaseManager::calculateSha256(const QString& input) const {
+QString DatabaseManager::calculateSha256(const QString& input) const {  // Работа с базой данных
     QByteArray hashBytes  =  QCryptographicHash::hash(
         input.toUtf8(),
         QCryptographicHash::Sha256

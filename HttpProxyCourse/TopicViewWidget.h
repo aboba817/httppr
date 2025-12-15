@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл TopicViewWidget.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -11,27 +7,44 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-/**
- * Виджет просмотра теоретического материала темы.
+/*!
+ * @brief Реализует функциональность класса TopicViewWidget
  */
 class TopicViewWidget : public QWidget {
     Q_OBJECT
 
 public:
     
-    explicit TopicViewWidget(QWidget *parent  =  nullptr);
+/*!
+ * @brief Возвращает значение
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
+    explicit TopicViewWidget(QWidget* parent  =  nullptr);
 
-    /**
-     * Отображает элемент интерфейса.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @param topic Входной параметр
+ * @param topicIndex Входной параметр
+ */
     void showTopic(const Topic& topic, int topicIndex);
 
 signals:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void startTestRequested();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void backRequested();
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param topicIndex Входной параметр
+ */
     void progressUpdateRequested(int topicIndex);
 
 protected:
@@ -40,13 +53,16 @@ protected:
 
 private slots:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onBackClicked();
 
 private:
     
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateUserProgress();
 
     QTextBrowser* textBrowser;

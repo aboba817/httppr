@@ -5,20 +5,20 @@
 #include <QDebug>
 
 bool TestResultDao::save(const TestResult& result) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in TestResultDao::save";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("INSERT INTO test_results (user_id, test_date, score, max_score) VALUES (?, ?, ?, ?)");
+    query.prepare("INSERT INTO test_results (user_id, test_date, score, max_score) VALUES (?, ?, ?, ?)");  // Выполнение SQL запроса
     query.addBindValue(result.userId);
     query.addBindValue(result.testDate);
     query.addBindValue(result.score);
     query.addBindValue(result.maxScore);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to save test result:" << query.lastError().text();
         return false;
     }
@@ -31,17 +31,17 @@ bool TestResultDao::save(const TestResult& result) {
 QList<TestResult> TestResultDao::findByUserId(int userId) {
     QList<TestResult> results;
     
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in TestResultDao::findByUserId";
         return results;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT id, user_id, test_date, score, max_score FROM test_results WHERE user_id  =  ? ORDER BY test_date DESC");
+    query.prepare("SELECT id, user_id, test_date, score, max_score FROM test_results WHERE user_id  =  ? ORDER BY test_date DESC");  // Выполнение SQL запроса
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to fetch test results:" << query.lastError().text();
         return results;
     }
@@ -62,16 +62,16 @@ QList<TestResult> TestResultDao::findByUserId(int userId) {
 QList<TestResult> TestResultDao::findAll() {
     QList<TestResult> results;
     
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in TestResultDao::findAll";
         return results;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT id, user_id, test_date, score, max_score FROM test_results ORDER BY test_date DESC");
+    query.prepare("SELECT id, user_id, test_date, score, max_score FROM test_results ORDER BY test_date DESC");  // Выполнение SQL запроса
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to fetch all test results:" << query.lastError().text();
         return results;
     }
@@ -92,14 +92,14 @@ QList<TestResult> TestResultDao::findAll() {
 TestResult TestResultDao::getBestResult(int userId) {
     TestResult bestResult;
     
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in TestResultDao::getBestResult";
         return bestResult;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare(R"(
+    query.prepare(R"(  // Выполнение SQL запроса
         SELECT id, user_id, test_date, score, max_score 
         FROM test_results 
         WHERE user_id  =  ? 
@@ -108,12 +108,12 @@ TestResult TestResultDao::getBestResult(int userId) {
     )");
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to fetch best result:" << query.lastError().text();
         return bestResult;
     }
     
-    if (query.next()) {
+    if (query.next()) {  // Проверка условия
         bestResult.id  =  query.value("id").toInt();
         bestResult.userId  =  query.value("user_id").toInt();
         bestResult.testDate  =  query.value("test_date").toDateTime();
@@ -125,26 +125,26 @@ TestResult TestResultDao::getBestResult(int userId) {
 }
 
 double TestResultDao::getAverageScore(int userId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in TestResultDao::getAverageScore";
         return 0.0;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare(R"(
-        SELECT AVG(CAST(score AS FLOAT) / max_score * 100) as avg_percentage 
+    query.prepare(R"(  // Выполнение SQL запроса
+        SELECT AVG(CAST(score AS FLOAT) / max_score* 100) as avg_percentage 
         FROM test_results 
         WHERE user_id  =  ? AND max_score > 0
     )");
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to calculate average score:" << query.lastError().text();
         return 0.0;
     }
     
-    if (query.next()) {
+    if (query.next()) {  // Проверка условия
         return query.value("avg_percentage").toDouble();
     }
     
@@ -152,17 +152,17 @@ double TestResultDao::getAverageScore(int userId) {
 }
 
 bool TestResultDao::deleteByUserId(int userId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qWarning() << "Database not connected in TestResultDao::deleteByUserId";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("DELETE FROM test_results WHERE user_id  =  ?");
+    query.prepare("DELETE FROM test_results WHERE user_id  =  ?");  // Выполнение SQL запроса
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to delete test results:" << query.lastError().text();
         return false;
     }
