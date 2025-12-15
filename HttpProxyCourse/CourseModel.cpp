@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include <QRegularExpression>
 
 CourseModel::CourseModel(QObject* parent) : QObject(parent) {
     
@@ -148,7 +149,7 @@ bool TestResultsModel::loadUserResults(int userId) {
         return false;
     }
 
-    setQuery(query);
+    setQuery(std::move(query));
     return true;
 }
 
@@ -189,7 +190,7 @@ bool TestResultsModel::loadAllResults() {
         return false;
     }
 
-    setQuery(query);
+    setQuery(std::move(query));
     return true;
 }
 
@@ -243,7 +244,7 @@ TestResultsFilterModel::TestResultsFilterModel(QObject* parent)
 
 void TestResultsFilterModel::setNameFilter(const QString& surname) {
     m_nameFilter  =  surname.trimmed();
-    setFilterRegExp(QRegExp(m_nameFilter, Qt::CaseInsensitive, QRegExp::FixedString));
+    setFilterRegularExpression(QRegularExpression::escape(m_nameFilter));
 }
 
 bool TestResultsFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const {
