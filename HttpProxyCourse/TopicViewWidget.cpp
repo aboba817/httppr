@@ -5,14 +5,14 @@
 #include <QDebug>
 
 TopicViewWidget::TopicViewWidget(QWidget *parent) : QWidget(parent), currentTopicIndex(-1) {
-    auto layout = new QVBoxLayout(this);
+    auto layout  =  new QVBoxLayout(this);
 
-    textBrowser = new QTextBrowser(this);
+    textBrowser  =  new QTextBrowser(this);
     textBrowser->setReadOnly(true);
     textBrowser->setOpenExternalLinks(false);
 
-    btnStartTest = new QPushButton("Перейти к тесту", this);
-    btnBack = new QPushButton("Назад к списку", this);
+    btnStartTest  =  new QPushButton("Перейти к тесту", this);
+    btnBack  =  new QPushButton("Назад к списку", this);
 
     layout->addWidget(textBrowser);
     layout->addWidget(btnStartTest);
@@ -24,7 +24,7 @@ TopicViewWidget::TopicViewWidget(QWidget *parent) : QWidget(parent), currentTopi
 
 void TopicViewWidget::showTopic(const Topic& topic, int topicIndex) {
     textBrowser->setHtml(topic.htmlContent);
-    currentTopicIndex = topicIndex;
+    currentTopicIndex  =  topicIndex;
     qDebug() << "Showing topic" << topicIndex << ":" << topic.title;
 }
 
@@ -40,9 +40,8 @@ void TopicViewWidget::onBackClicked() {
 
 void TopicViewWidget::updateUserProgress() {
     if (currentTopicIndex < 0) {
-        return; // Нет активной темы
+        return; 
     }
     
-    // Отправляем сигнал для обновления прогресса
     emit progressUpdateRequested(currentTopicIndex);
 }

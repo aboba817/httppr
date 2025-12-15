@@ -9,19 +9,18 @@ SessionManager::SessionManager()
     : m_isLoaded(false)
     , currentTopicIndex(-1)
     , currentQuestionIndex(-1)
-    , errorsInTopic(0)
-{
+    , errorsInTopic(0) {
 }
 
 void SessionManager::loadCourse(const QString& filePath) {
     try {
-        currentCourse = Serializer::load(filePath);
-        m_isLoaded = true;
-        currentTopicIndex = -1;
-        currentQuestionIndex = -1;
-        errorsInTopic = 0;
+        currentCourse  =  Serializer::load(filePath);
+        m_isLoaded  =  true;
+        currentTopicIndex  =  -1;
+        currentQuestionIndex  =  -1;
+        errorsInTopic  =  0;
     } catch (const std::exception& e) {
-        m_isLoaded = false;
+        m_isLoaded  =  false;
         throw std::runtime_error(std::string("Failed to load course: ") + e.what());
     }
 }
@@ -34,14 +33,14 @@ void SessionManager::startTopic(int topicIndex) {
     if (!m_isLoaded) {
         throw std::runtime_error("Course not loaded");
     }
-    // Безопасное сравнение индексов
-    if (topicIndex < 0 || topicIndex >= currentCourse.topics.size()) {
+    
+    if (topicIndex < 0 || topicIndex  >=  currentCourse.topics.size()) {
         throw std::runtime_error("Invalid topic index");
     }
 
-    currentTopicIndex = topicIndex;
-    currentQuestionIndex = 0;
-    errorsInTopic = 0;
+    currentTopicIndex  =  topicIndex;
+    currentQuestionIndex  =  0;
+    errorsInTopic  =  0;
 }
 
 const Course& SessionManager::getCourse() const {
@@ -53,50 +52,48 @@ Course& SessionManager::getMutableCourse() {
 }
 
 Topic* SessionManager::getCurrentTopic() {
-    if (!m_isLoaded || currentTopicIndex < 0 || currentTopicIndex >= currentCourse.topics.size()) {
+    if (!m_isLoaded || currentTopicIndex < 0 || currentTopicIndex  >=  currentCourse.topics.size()) {
         return nullptr;
     }
     return &currentCourse.topics[currentTopicIndex];
 }
 
 Question* SessionManager::getCurrentQuestion() {
-    Topic* topic = getCurrentTopic();
+    Topic* topic  =  getCurrentTopic();
     if (!topic) return nullptr;
 
-    if (currentQuestionIndex < 0 || currentQuestionIndex >= topic->questions.size()) {
+    if (currentQuestionIndex < 0 || currentQuestionIndex  >=  topic->questions.size()) {
         return nullptr;
     }
     return &topic->questions[currentQuestionIndex];
 }
 
 SessionManager::SubmitResult SessionManager::submitAnswer(int answerIndex) {
-    // Критическая проверка: курс должен быть загружен
+    
     if (!m_isLoaded) {
         throw std::runtime_error("Cannot submit answer: course not loaded");
     }
 
-    Topic* topic = getCurrentTopic();
-    Question* question = getCurrentQuestion();
+    Topic* topic  =  getCurrentTopic();
+    Question* question  =  getCurrentQuestion();
 
     if (!topic || !question) {
         throw std::runtime_error("Cannot submit answer: invalid topic or question state");
     }
 
-    // Проверяем границы answerIndex
-    if (answerIndex < 0 || answerIndex >= question->variants.size()) {
+    if (answerIndex < 0 || answerIndex  >=  question->variants.size()) {
         return SubmitResult::Wrong;
     }
 
-    // Проверяем корректность correctIndex (дополнительная защита)
-    if (question->correctIndex < 0 || question->correctIndex >= question->variants.size()) {
+    if (question->correctIndex < 0 || question->correctIndex  >=  question->variants.size()) {
         return SubmitResult::Wrong;
     }
 
-    if (answerIndex == question->correctIndex) {
+    if (answerIndex  ==  question->correctIndex) {
         currentQuestionIndex++;
 
-        if (currentQuestionIndex >= topic->questions.size()) {
-            if (currentTopicIndex >= currentCourse.topics.size() - 1) {
+        if (currentQuestionIndex  >=  topic->questions.size()) {
+            if (currentTopicIndex  >=  currentCourse.topics.size() - 1) {
                 return SubmitResult::CourseFinished;
             }
             return SubmitResult::TopicFinished;
@@ -104,9 +101,9 @@ SessionManager::SubmitResult SessionManager::submitAnswer(int answerIndex) {
         return SubmitResult::Correct;
     } else {
         errorsInTopic++;
-        if (errorsInTopic >= MAX_ERRORS) {
-            currentQuestionIndex = 0;
-            errorsInTopic = 0;
+        if (errorsInTopic  >=  MAX_ERRORS) {
+            currentQuestionIndex  =  0;
+            errorsInTopic  =  0;
             return SubmitResult::FailRelearn;
         }
         return SubmitResult::Wrong;
@@ -114,7 +111,7 @@ SessionManager::SubmitResult SessionManager::submitAnswer(int answerIndex) {
 }
 
 void SessionManager::setCurrentUser(const User& user) {
-    m_currentUser = user;
+    m_currentUser  =  user;
     if (user.isValid()) {
         loadProgress();
     }
@@ -129,10 +126,10 @@ bool SessionManager::hasUser() const {
 }
 
 void SessionManager::clearSession() {
-    m_currentUser = User(); // Сброс пользователя
-    currentTopicIndex = -1;
-    currentQuestionIndex = -1;
-    errorsInTopic = 0;
+    m_currentUser  =  User(); 
+    currentTopicIndex  =  -1;
+    currentQuestionIndex  =  -1;
+    errorsInTopic  =  0;
 }
 
 bool SessionManager::saveProgress() {
@@ -145,7 +142,7 @@ bool SessionManager::saveProgress() {
         INSERT INTO progress (user_id, last_topic_id, updated_at) 
         VALUES (?, ?, CURRENT_TIMESTAMP)
         ON CONFLICT (user_id) 
-        DO UPDATE SET last_topic_id = ?, updated_at = CURRENT_TIMESTAMP
+        DO UPDATE SET last_topic_id  =  ?, updated_at  =  CURRENT_TIMESTAMP
     )");
     
     query.addBindValue(m_currentUser.id);
@@ -167,7 +164,7 @@ bool SessionManager::loadProgress() {
     }
 
     QSqlQuery query(DatabaseManager::instance().database());
-    query.prepare("SELECT last_topic_id FROM progress WHERE user_id = ?");
+    query.prepare("SELECT last_topic_id FROM progress WHERE user_id  =  ?");
     query.addBindValue(m_currentUser.id);
 
     if (!query.exec()) {
@@ -176,14 +173,13 @@ bool SessionManager::loadProgress() {
     }
 
     if (query.next()) {
-        int lastTopicId = query.value("last_topic_id").toInt();
+        int lastTopicId  =  query.value("last_topic_id").toInt();
         qDebug() << "Loaded progress for user" << m_currentUser.login << "last topic" << lastTopicId;
         
-        // Устанавливаем прогресс только если курс загружен
-        if (m_isLoaded && lastTopicId >= 0 && lastTopicId < currentCourse.topics.size()) {
-            currentTopicIndex = lastTopicId;
-            currentQuestionIndex = 0;
-            errorsInTopic = 0;
+        if (m_isLoaded && lastTopicId  >=  0 && lastTopicId < currentCourse.topics.size()) {
+            currentTopicIndex  =  lastTopicId;
+            currentQuestionIndex  =  0;
+            errorsInTopic  =  0;
         }
         return true;
     }

@@ -1,25 +1,23 @@
 #include "mainwindow.h"
 #include <QApplication>
 
-// Константа для имени файла курса
-static const QString COURSE_DATA_FILE = "course.dat";
+static const QString COURSE_DATA_FILE  =  "course.dat";
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , m_adminWidget(nullptr)
-    , m_studentProfileWidget(nullptr)
-{
+    , m_studentProfileWidget(nullptr) {
     setWindowTitle("HTTP Proxy Training System");
     resize(900, 650);
 
     setupMenu();
 
-    m_stackedWidget = new QStackedWidget(this);
+    m_stackedWidget  =  new QStackedWidget(this);
 
-    m_loginWidget = new LoginWidget(this);
-    m_topicWidget = new TopicSelectionWidget(this);
-    m_topicViewWidget = new TopicViewWidget(this);
-    m_testWidget = new TestWidget(this);
+    m_loginWidget  =  new LoginWidget(this);
+    m_topicWidget  =  new TopicSelectionWidget(this);
+    m_topicViewWidget  =  new TopicViewWidget(this);
+    m_testWidget  =  new TestWidget(this);
 
     m_stackedWidget->addWidget(m_loginWidget);
     m_stackedWidget->addWidget(m_topicWidget);
@@ -28,11 +26,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     setCentralWidget(m_stackedWidget);
 
-    // Новые сигналы для аутентификации
     connect(m_loginWidget, &LoginWidget::userAuthenticated,
             this, &MainWindow::handleUserAuthenticated);
     
-    // Сигналы для обратной совместимости
     connect(m_loginWidget, &LoginWidget::startStudentSession,
             this, &MainWindow::handleStudentStart);
     connect(m_loginWidget, &LoginWidget::adminLoginAttempt,
@@ -59,14 +55,13 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() {
-    // Деструктор явно определен для корректной очистки ресурсов
-    // Qt автоматически удаляет дочерние виджеты
+    
 }
 
 void MainWindow::setupMenu() {
-    QMenuBar* bar = menuBar();
-    QMenu* helpMenu = bar->addMenu("Справка");
-    QAction* aboutAction = helpMenu->addAction("О программе");
+    QMenuBar* bar  =  menuBar();
+    QMenu* helpMenu  =  bar->addMenu("Справка");
+    QAction* aboutAction  =  helpMenu->addAction("О программе");
     connect(aboutAction, &QAction::triggered, this, &MainWindow::showAboutDialog);
 }
 
@@ -100,21 +95,20 @@ void MainWindow::handleUserAuthenticated(const User& user) {
         return;
     }
     
-    // Установка пользователя в сессии
     m_sessionManager.setCurrentUser(user);
     
     if (user.isAdmin()) {
-        // Администратор - переход к админ-панели
+        
         if (!m_adminWidget) {
-            m_adminWidget = new AdminWidget(&m_sessionManager.getMutableCourse(), this);
+            m_adminWidget  =  new AdminWidget(&m_sessionManager.getMutableCourse(), this);
             connect(m_adminWidget, &AdminWidget::backRequested,
                     this, &MainWindow::onAdminBackRequested);
             m_stackedWidget->addWidget(m_adminWidget);
         }
-        m_adminWidget->setCurrentUser(user); // Установка пользователя для проверки прав
+        m_adminWidget->setCurrentUser(user); 
         m_stackedWidget->setCurrentWidget(m_adminWidget);
     } else {
-        // Студент - переход к выбору тем
+        
         m_topicWidget->setTopics(m_sessionManager.getCourse().topics);
         m_stackedWidget->setCurrentWidget(m_topicWidget);
     }
@@ -126,7 +120,6 @@ void MainWindow::handleStudentStart() {
         return;
     }
     
-    // Создание гостевого пользователя
     User guestUser(-1, "guest", "Гость", "student");
     m_sessionManager.setCurrentUser(guestUser);
     
@@ -137,8 +130,8 @@ void MainWindow::handleStudentStart() {
 void MainWindow::handleAdminLogin(const QString& password) {
     if (AuthService::checkAdminPassword(password)) {
         if (!m_adminWidget) {
-            // Передаем изменяемую ссылку на курс через SessionManager
-            m_adminWidget = new AdminWidget(&m_sessionManager.getMutableCourse(), this);
+            
+            m_adminWidget  =  new AdminWidget(&m_sessionManager.getMutableCourse(), this);
             connect(m_adminWidget, &AdminWidget::backRequested,
                     this, &MainWindow::onAdminBackRequested);
             m_stackedWidget->addWidget(m_adminWidget);
@@ -162,7 +155,7 @@ void MainWindow::onTopicSelected(int index) {
     try {
         m_sessionManager.startTopic(index);
 
-        Topic* topic = m_sessionManager.getCurrentTopic();
+        Topic* topic  =  m_sessionManager.getCurrentTopic();
         if (topic) {
             m_topicViewWidget->showTopic(*topic, index);
             m_stackedWidget->setCurrentWidget(m_topicViewWidget);
@@ -174,19 +167,18 @@ void MainWindow::onTopicSelected(int index) {
 
 void MainWindow::onStartTestRequested() {
     try {
-        Topic* currentTopic = m_sessionManager.getCurrentTopic();
+        Topic* currentTopic  =  m_sessionManager.getCurrentTopic();
         if (!currentTopic || currentTopic->questions.isEmpty()) {
             QMessageBox::warning(this, "Внимание", "В данной теме отсутствуют вопросы для тестирования.");
             return;
         }
         
-        User currentUser = m_sessionManager.getCurrentUser();
+        User currentUser  =  m_sessionManager.getCurrentUser();
         if (!currentUser.isValid()) {
             QMessageBox::critical(this, "Ошибка", "Пользователь не авторизован.");
             return;
         }
         
-        // Запуск теста с вопросами текущей темы
         m_testWidget->startTest(currentTopic->questions, currentUser);
         m_stackedWidget->setCurrentWidget(m_testWidget);
         
@@ -197,13 +189,12 @@ void MainWindow::onStartTestRequested() {
 
 void MainWindow::onAnswerSubmitted(int answerIndex) {
     try {
-        auto result = m_sessionManager.submitAnswer(answerIndex);
+        auto result  =  m_sessionManager.submitAnswer(answerIndex);
 
         switch (result) {
         case SessionManager::SubmitResult::Correct:
-            QMessageBox::information(this, "Верно", "Правильный ответ!");
-            {
-                Question* nextQ = m_sessionManager.getCurrentQuestion();
+            QMessageBox::information(this, "Верно", "Правильный ответ!"); {
+                Question* nextQ  =  m_sessionManager.getCurrentQuestion();
                 if (nextQ) {
                     m_testWidget->showQuestion(*nextQ);
                 }
@@ -223,14 +214,14 @@ void MainWindow::onAnswerSubmitted(int answerIndex) {
 
         case SessionManager::SubmitResult::TopicFinished:
             QMessageBox::information(this, "Успех", "Тема успешно пройдена!");
-            m_sessionManager.saveProgress(); // Сохранение прогресса
+            m_sessionManager.saveProgress(); 
             m_topicWidget->setTopics(m_sessionManager.getCourse().topics);
             m_stackedWidget->setCurrentWidget(m_topicWidget);
             break;
 
         case SessionManager::SubmitResult::CourseFinished:
             QMessageBox::information(this, "Поздравляем", "Вы успешно завершили весь курс!");
-            m_sessionManager.saveProgress(); // Сохранение прогресса
+            m_sessionManager.saveProgress(); 
             m_stackedWidget->setCurrentWidget(m_topicWidget);
             break;
         }
@@ -243,51 +234,48 @@ void MainWindow::onAnswerSubmitted(int answerIndex) {
 
 void MainWindow::onTestFinished(int score, int maxScore, bool timeExpired) {
     QString message;
-    double percentage = maxScore > 0 ? (static_cast<double>(score) / maxScore) * 100.0 : 0.0;
+    double percentage  =  maxScore > 0 ? (static_cast<double>(score) / maxScore) * 100.0 : 0.0;
     
     if (timeExpired) {
-        message = QString("Время тестирования истекло!\n\n"
+        message  =  QString("Время тестирования истекло!\n\n"
                          "Результат: %1 из %2 (%3%)")
                          .arg(score).arg(maxScore).arg(percentage, 0, 'f', 1);
     } else {
-        message = QString("Тест завершен!\n\n"
+        message  =  QString("Тест завершен!\n\n"
                          "Результат: %1 из %2 (%3%)")
                          .arg(score).arg(maxScore).arg(percentage, 0, 'f', 1);
     }
     
-    // Определение оценки
     QString grade;
-    if (percentage >= 90) {
-        grade = "Отлично";
-    } else if (percentage >= 75) {
-        grade = "Хорошо";
-    } else if (percentage >= 60) {
-        grade = "Удовлетворительно";
+    if (percentage  >=  90) {
+        grade  =  "Отлично";
+    } else if (percentage  >=  75) {
+        grade  =  "Хорошо";
+    } else if (percentage  >=  60) {
+        grade  =  "Удовлетворительно";
     } else {
-        grade = "Неудовлетворительно";
+        grade  =  "Неудовлетворительно";
     }
     
-    message += QString("\nОценка: %1").arg(grade);
+    message + =  QString("\nОценка: %1").arg(grade);
     
     QMessageBox::information(this, "Результат тестирования", message);
     
-    // Возврат к выбору тем
     m_stackedWidget->setCurrentWidget(m_topicWidget);
 }
 
 void MainWindow::onShowProfileRequested() {
-    // Проверяем, что пользователь аутентифицирован
+    
     if (!m_sessionManager.hasUser()) {
         QMessageBox::warning(this, "Доступ запрещен", 
                            "Профиль доступен только для зарегистрированных пользователей.");
         return;
     }
 
-    User currentUser = m_sessionManager.getCurrentUser();
+    User currentUser  =  m_sessionManager.getCurrentUser();
     
-    // Создаем виджет профиля, если он еще не создан
     if (!m_studentProfileWidget) {
-        m_studentProfileWidget = new StudentProfileWidget(this);
+        m_studentProfileWidget  =  new StudentProfileWidget(this);
         connect(m_studentProfileWidget, &StudentProfileWidget::backRequested,
                 this, [this]() { 
                     m_stackedWidget->setCurrentWidget(m_topicWidget); 
@@ -295,7 +283,6 @@ void MainWindow::onShowProfileRequested() {
         m_stackedWidget->addWidget(m_studentProfileWidget);
     }
     
-    // Устанавливаем текущего пользователя и показываем профиль
     m_studentProfileWidget->setCurrentUser(currentUser);
     m_stackedWidget->setCurrentWidget(m_studentProfileWidget);
 }

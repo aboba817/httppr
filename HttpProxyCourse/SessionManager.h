@@ -1,3 +1,8 @@
+/**
+ * Заголовочный файл SessionManager.h.
+ * Содержит объявления классов и функций для системы HTTP Proxy Course.
+ */
+
 #pragma once
 
 #include "DomainTypes.h"
@@ -7,112 +12,57 @@
 #include <QDateTime>
 
 /**
- * @brief Менеджер сессии обучения.
- * 
- * Управляет состоянием текущей сессии обучения, включая загрузку курса,
- * навигацию по темам и вопросам, обработку ответов студента.
+ * Менеджер сессий пользователей для отслеживания активных подключений.
  */
 class SessionManager {
 public:
-    /// @brief Максимальное количество ошибок в теме перед принудительным повтором
-    static const int MAX_ERRORS = 3;
-    /**
-     * @brief Результат отправки ответа на вопрос.
-     */
+    
+    static const int MAX_ERRORS  =  3;
+    
     enum class SubmitResult {
-        Correct,        ///< Правильный ответ
-        Wrong,          ///< Неправильный ответ
-        FailRelearn,    ///< Слишком много ошибок, нужно повторить тему
-        TopicFinished,  ///< Тема завершена успешно
-        CourseFinished  ///< Весь курс завершен
+        Correct,        
+        Wrong,          
+        FailRelearn,    
+        TopicFinished,  
+        CourseFinished  
     };
 
-    /**
-     * @brief Конструктор менеджера сессии.
-     */
     SessionManager();
 
-    /**
-     * @brief Устанавливает текущего пользователя сессии.
-     * @param user Пользователь для установки.
-     */
     void setCurrentUser(const User& user);
 
-    /**
-     * @brief Возвращает текущего пользователя.
-     * @return Текущий пользователь или невалидный User, если не установлен.
-     */
     const User& getCurrentUser() const;
 
-    /**
-     * @brief Проверяет, установлен ли пользователь.
-     * @return true, если пользователь установлен.
-     */
     bool hasUser() const;
 
     /**
-     * @brief Очищает текущую сессию пользователя.
+     * Очищает данные или состояние.
      */
     void clearSession();
 
-    /**
-     * @brief Загружает курс из файла.
-     * @param filePath Путь к файлу с данными курса.
-     */
     void loadCourse(const QString& filePath);
 
-    /**
-     * @brief Проверяет, загружен ли курс.
-     * @return true, если курс загружен.
-     */
     bool isCourseLoaded() const;
 
-    /**
-     * @brief Начинает изучение указанной темы.
-     * @param topicIndex Индекс темы для изучения.
-     */
     void startTopic(int topicIndex);
 
-    /**
-     * @brief Возвращает константную ссылку на курс.
-     * @return Ссылка на объект курса.
-     */
     const Course& getCourse() const;
 
-    /**
-     * @brief Возвращает изменяемую ссылку на курс.
-     * @return Изменяемая ссылка на объект курса.
-     */
     Course& getMutableCourse();
 
-    /**
-     * @brief Возвращает указатель на текущую тему.
-     * @return Указатель на текущую тему или nullptr.
-     */
     Topic* getCurrentTopic();
 
-    /**
-     * @brief Возвращает указатель на текущий вопрос.
-     * @return Указатель на текущий вопрос или nullptr.
-     */
     Question* getCurrentQuestion();
 
-    /**
-     * @brief Обрабатывает ответ студента на текущий вопрос.
-     * @param answerIndex Индекс выбранного ответа.
-     * @return Результат обработки ответа.
-     */
     SubmitResult submitAnswer(int answerIndex);
 
     /**
-     * @brief Сохраняет прогресс пользователя в базу данных.
-     * @return true, если прогресс сохранен успешно.
+     * Сохраняет данные в хранилище.
      */
     bool saveProgress();
 
     /**
-     * @brief Загружает прогресс пользователя из базы данных.
-     * @return true, если прогресс загружен успешно.
+     * Загружает данные из хранилища.
      */
     bool loadProgress();
 

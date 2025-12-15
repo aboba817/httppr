@@ -2,26 +2,22 @@
 #include <QMutex>
 #include <QMutexLocker>
 
-// Статические переменные
-bool Logger::s_fileLoggingEnabled = false;
-QString Logger::s_logFilePath = "application.log";
+bool Logger::s_fileLoggingEnabled  =  false;
+QString Logger::s_logFilePath  =  "application.log";
 
-// Мьютекс для потокобезопасности
 static QMutex s_logMutex;
 
 void Logger::log(Level level, const QString& message, const QString& category) {
     QMutexLocker locker(&s_logMutex);
     
-    // Формируем строку лога
-    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
-    QString levelStr = levelToString(level);
-    QString logLine = QString("[%1] [%2] [%3] %4")
+    QString timestamp  =  QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
+    QString levelStr  =  levelToString(level);
+    QString logLine  =  QString("[%1] [%2] [%3] %4")
                         .arg(timestamp)
                         .arg(levelStr)
                         .arg(category)
                         .arg(message);
     
-    // Выводим в консоль в зависимости от уровня
     switch (level) {
         case Level::Debug:
             qDebug().noquote() << logLine;
@@ -40,7 +36,6 @@ void Logger::log(Level level, const QString& message, const QString& category) {
             break;
     }
     
-    // Записываем в файл, если включено
     if (s_fileLoggingEnabled) {
         QFile logFile(s_logFilePath);
         if (logFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
@@ -53,8 +48,8 @@ void Logger::log(Level level, const QString& message, const QString& category) {
 
 void Logger::setFileLogging(bool enabled, const QString& filePath) {
     QMutexLocker locker(&s_logMutex);
-    s_fileLoggingEnabled = enabled;
-    s_logFilePath = filePath;
+    s_fileLoggingEnabled  =  enabled;
+    s_logFilePath  =  filePath;
     
     if (enabled) {
         qDebug() << "Логирование в файл включено:" << filePath;

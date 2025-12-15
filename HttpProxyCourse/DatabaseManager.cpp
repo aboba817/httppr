@@ -1,3 +1,8 @@
+/**
+ * Реализация функций и методов для системы HTTP Proxy Course.
+ * Файл содержит основную логику работы компонентов приложения.
+ */
+
 #include "DatabaseManager.h"
 #include <QSqlQuery>
 #include <QSqlError>
@@ -6,7 +11,7 @@
 #include <QMutexLocker>
 
 DatabaseManager::DatabaseManager() : m_connected(false) {
-    // Инициализация подключения к БД
+    // Инициализация драйвера PostgreSQL
     m_database = QSqlDatabase::addDatabase("QPSQL");
 }
 
@@ -22,17 +27,18 @@ DatabaseManager& DatabaseManager::instance() {
 }
 
 bool DatabaseManager::connectDb() {
-    QMutexLocker locker(&m_mutex);
+    QMutexLocker locker(&m_mutex);  // Потокобезопасность
     
+    // Проверка существующего подключения
     if (m_connected && m_database.isOpen()) {
         return true;
     }
 
-    // Загружаем конфигурацию БД из файла
+    // Загрузка конфигурации подключения
     DatabaseConfig& config = DatabaseConfig::instance();
     config.loadConfig();
 
-    // Настройка параметров подключения из конфигурации
+    // Настройка параметров подключения
     m_database.setHostName(config.hostName());
     m_database.setDatabaseName(config.databaseName());
     m_database.setUserName(config.userName());
@@ -81,8 +87,7 @@ QSqlDatabase& DatabaseManager::database() {
 bool DatabaseManager::createTables() {
     QSqlQuery query(m_database);
 
-    // Создание таблицы users согласно ТЗ
-    QString createUsersTable = R"(
+    QString createUsersTable  =  R"(
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
             login VARCHAR(255) UNIQUE NOT NULL,
@@ -97,8 +102,7 @@ bool DatabaseManager::createTables() {
         return false;
     }
 
-    // Создание таблицы progress
-    QString createProgressTable = R"(
+    QString createProgressTable  =  R"(
         CREATE TABLE IF NOT EXISTS progress (
             user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
             last_topic_id INTEGER NOT NULL,
@@ -112,8 +116,7 @@ bool DatabaseManager::createTables() {
         return false;
     }
 
-    // Создание таблицы test_results
-    QString createTestResultsTable = R"(
+    QString createTestResultsTable  =  R"(
         CREATE TABLE IF NOT EXISTS test_results (
             id SERIAL PRIMARY KEY,
             user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
@@ -135,7 +138,6 @@ bool DatabaseManager::createTables() {
 bool DatabaseManager::seedData() {
     QSqlQuery query(m_database);
 
-    // Проверяем, пуста ли таблица users
     if (!query.exec("SELECT COUNT(*) FROM users")) {
         qCritical() << "Failed to check users table:" << query.lastError().text();
         return false;
@@ -146,8 +148,7 @@ bool DatabaseManager::seedData() {
         return true;
     }
 
-    // Вставляем администратора по умолчанию
-    QString adminPasswordHash = calculateSha256("admin");
+    QString adminPasswordHash  =  calculateSha256("admin");
     
     query.prepare(R"(
         INSERT INTO users (login, password_hash, full_name, role) 
@@ -170,7 +171,7 @@ bool DatabaseManager::seedData() {
 }
 
 QString DatabaseManager::calculateSha256(const QString& input) const {
-    QByteArray hashBytes = QCryptographicHash::hash(
+    QByteArray hashBytes  =  QCryptographicHash::hash(
         input.toUtf8(),
         QCryptographicHash::Sha256
     );

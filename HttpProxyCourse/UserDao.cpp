@@ -7,14 +7,14 @@
 User UserDao::findByLogin(const QString& login) {
     User user;
     
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in UserDao::findByLogin";
         return user;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT id, login, full_name, role FROM users WHERE login = ?");
+    query.prepare("SELECT id, login, full_name, role FROM users WHERE login  =  ?");
     query.addBindValue(login.trimmed());
     
     if (!query.exec()) {
@@ -23,17 +23,17 @@ User UserDao::findByLogin(const QString& login) {
     }
     
     if (query.next()) {
-        user.id = query.value("id").toInt();
-        user.login = query.value("login").toString();
-        user.fullName = query.value("full_name").toString();
-        user.role = query.value("role").toString();
+        user.id  =  query.value("id").toInt();
+        user.login  =  query.value("login").toString();
+        user.fullName  =  query.value("full_name").toString();
+        user.role  =  query.value("role").toString();
     }
     
     return user;
 }
 
 bool UserDao::create(const User& user, const QString& passwordHash) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in UserDao::create";
         return false;
@@ -55,14 +55,14 @@ bool UserDao::create(const User& user, const QString& passwordHash) {
 }
 
 bool UserDao::existsByLogin(const QString& login) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in UserDao::existsByLogin";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT COUNT(*) FROM users WHERE login = ?");
+    query.prepare("SELECT COUNT(*) FROM users WHERE login  =  ?");
     query.addBindValue(login.trimmed());
     
     if (!query.exec()) {
@@ -76,7 +76,7 @@ bool UserDao::existsByLogin(const QString& login) {
 QList<User> UserDao::findAll() {
     QList<User> users;
     
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in UserDao::findAll";
         return users;
@@ -92,10 +92,10 @@ QList<User> UserDao::findAll() {
     
     while (query.next()) {
         User user;
-        user.id = query.value("id").toInt();
-        user.login = query.value("login").toString();
-        user.fullName = query.value("full_name").toString();
-        user.role = query.value("role").toString();
+        user.id  =  query.value("id").toInt();
+        user.login  =  query.value("login").toString();
+        user.fullName  =  query.value("full_name").toString();
+        user.role  =  query.value("role").toString();
         users.append(user);
     }
     
@@ -103,14 +103,14 @@ QList<User> UserDao::findAll() {
 }
 
 bool UserDao::update(const User& user) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in UserDao::update";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("UPDATE users SET login = ?, full_name = ?, role = ? WHERE id = ?");
+    query.prepare("UPDATE users SET login  =  ?, full_name  =  ?, role  =  ? WHERE id  =  ?");
     query.addBindValue(user.login.trimmed());
     query.addBindValue(user.fullName.trimmed());
     query.addBindValue(user.role);
@@ -125,14 +125,14 @@ bool UserDao::update(const User& user) {
 }
 
 bool UserDao::deleteById(int userId) {
-    DatabaseManager& dbManager = DatabaseManager::instance();
+    DatabaseManager& dbManager  =  DatabaseManager::instance();
     if (!dbManager.isConnected()) {
         qWarning() << "Database not connected in UserDao::deleteById";
         return false;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("DELETE FROM users WHERE id = ?");
+    query.prepare("DELETE FROM users WHERE id  =  ?");
     query.addBindValue(userId);
     
     if (!query.exec()) {
