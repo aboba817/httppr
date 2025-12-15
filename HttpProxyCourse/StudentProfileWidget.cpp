@@ -343,7 +343,7 @@ void StudentProfileWidget::updateTestHistory() {
         return;
     }
     
-    m_testHistoryModel->setQuery(query);
+    m_testHistoryModel->setQuery(std::move(query));
     m_testHistoryTable->setModel(m_testHistoryModel);
     
     if (m_testHistoryModel->lastError().isValid()) {  // Проверка условия

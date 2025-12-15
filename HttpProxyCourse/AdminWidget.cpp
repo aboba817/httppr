@@ -338,7 +338,7 @@ void AdminWidget::updateStudentStatistics() {
         return;
     }
 
-    m_statisticsModel->setQuery(query);
+    m_statisticsModel->setQuery(std::move(query));
     
     if (m_statisticsModel->lastError().isValid()) {  // Проверка условия
         qCritical() << "Model error:" << m_statisticsModel->lastError().text();
