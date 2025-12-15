@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл AdminWidget.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -24,55 +20,95 @@
 #include <QGridLayout>
 #include <QHeaderView>
 
-/**
- * Административная панель для управления системой.
+/*!
+ * @brief Реализует функциональность класса AdminWidget
  */
 class AdminWidget : public QWidget {
     Q_OBJECT
 
 public:
     
+/*!
+ * @brief Возвращает значение
+ * @param course Входной параметр
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
     explicit AdminWidget(Course* course, QWidget* parent  =  nullptr);
 
+/*!
+ * @brief Устанавливает значение
+ * @param user Входной параметр
+ */
     void setCurrentUser(const User& user);
 
 signals:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void backRequested();
 
 private slots:
     
+/*!
+ * @brief Выполняет основную операцию
+ * @param index Входной параметр
+ */
     void onTopicChanged(int index);
 
+/*!
+ * @brief Сохраняет данные
+ */
     void onSaveClicked();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onLogoutClicked();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onFilterChanged();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onRefreshStatistics();
 
 private:
     
-    /**
-     * Настраивает компонент для работы.
-     */
+/*!
+ * @brief Устанавливает значение
+ */
     void setupUi();
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createCourseEditTab();
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createStudentStatisticsTab();
 
+/*!
+ * @brief Загружает данные
+ */
     void loadTopics();
 
-    /**
-     * Обновляет состояние компонента.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void updateStudentStatistics();
 
-    /**
-     * Настраивает компонент для работы.
-     */
+/*!
+ * @brief Устанавливает значение
+ */
     void setupAccessRights();
 
     Course* m_course;

@@ -30,18 +30,33 @@ AppController::AppController(QStackedWidget* stackedWidget, QObject* parent)
     , m_currentQuestionIndex(-1)
     , m_correctAnswers(0) {
     
-    m_courseModel  =  new CourseModel(this);
-    m_testResultsModel  =  new TestResultsModel(this);
+/*!
+ * @brief Выполняет основную операцию
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_courseModel  =  new CourseModel(this);  // Создание объекта
+/*!
+ * @brief Выполняет основную операцию
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_testResultsModel  =  new TestResultsModel(this);  // Создание объекта
     
-    m_testTimer  =  new QTimer(this);
+/*!
+ * @brief Выполняет основную операцию
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_testTimer  =  new QTimer(this);  // Создание объекта
     m_testTimer->setSingleShot(true);
-    connect(m_testTimer, &QTimer::timeout, this, &AppController::handleTestTimeout);
+    connect(m_testTimer, &QTimer::timeout, this, &AppController::handleTestTimeout);  // Подключение сигнала
 }
 
 bool AppController::initialize() {
     
     const QString courseDataFile  =  "course.dat";
-    if (!m_courseModel->loadCourse(courseDataFile)) {
+    if (!m_courseModel->loadCourse(courseDataFile)) {  // Проверка условия
         qCritical() << "Failed to load course data";
         return false;
     }
@@ -57,11 +72,36 @@ bool AppController::initialize() {
 
 void AppController::setupViews() {
     
-    m_loginWidget  =  new LoginWidget(m_stackedWidget);
-    m_topicWidget  =  new TopicSelectionWidget(m_stackedWidget);
-    m_topicViewWidget  =  new TopicViewWidget(m_stackedWidget);
-    m_testWidget  =  new TestWidget(m_stackedWidget);
-    m_profileWidget  =  new StudentProfileWidget(m_stackedWidget);
+/*!
+ * @brief Возвращает значение
+ * @param m_stackedWidget Входной параметр
+ * @return Результат выполнения
+ */
+    m_loginWidget  =  new LoginWidget(m_stackedWidget);  // Создание объекта
+/*!
+ * @brief Возвращает значение
+ * @param m_stackedWidget Входной параметр
+ * @return Результат выполнения
+ */
+    m_topicWidget  =  new TopicSelectionWidget(m_stackedWidget);  // Создание объекта
+/*!
+ * @brief Возвращает значение
+ * @param m_stackedWidget Входной параметр
+ * @return Результат выполнения
+ */
+    m_topicViewWidget  =  new TopicViewWidget(m_stackedWidget);  // Создание объекта
+/*!
+ * @brief Возвращает значение
+ * @param m_stackedWidget Входной параметр
+ * @return Результат выполнения
+ */
+    m_testWidget  =  new TestWidget(m_stackedWidget);  // Создание объекта
+/*!
+ * @brief Возвращает значение
+ * @param m_stackedWidget Входной параметр
+ * @return Результат выполнения
+ */
+    m_profileWidget  =  new StudentProfileWidget(m_stackedWidget);  // Создание объекта
     
     m_stackedWidget->addWidget(m_loginWidget);
     m_stackedWidget->addWidget(m_topicWidget);
@@ -74,59 +114,71 @@ void AppController::setupViews() {
 
 void AppController::connectSignals() {
     
-    connect(m_courseModel, &CourseModel::errorOccurred,
+    connect(m_courseModel, &CourseModel::errorOccurred,  // Подключение сигнала
             this, &AppController::handleCourseModelError);
     
-    connect(m_testResultsModel, &TestResultsModel::databaseError,
+    connect(m_testResultsModel, &TestResultsModel::databaseError,  // Подключение сигнала
             this, &AppController::handleTestResultsError);
     
-    connect(m_loginWidget, &LoginWidget::userAuthenticated,
+    connect(m_loginWidget, &LoginWidget::userAuthenticated,  // Подключение сигнала
             this, &AppController::handleUserAuthenticated);
     
-    connect(m_topicWidget, &TopicSelectionWidget::topicSelected,
+    connect(m_topicWidget, &TopicSelectionWidget::topicSelected,  // Подключение сигнала
             this, &AppController::handleTopicSelected);
-    connect(m_topicWidget, &TopicSelectionWidget::logoutRequested,
+    connect(m_topicWidget, &TopicSelectionWidget::logoutRequested,  // Подключение сигнала
             this, &AppController::handleLogout);
-    connect(m_topicWidget, &TopicSelectionWidget::profileRequested,
+    connect(m_topicWidget, &TopicSelectionWidget::profileRequested,  // Подключение сигнала
             this, &AppController::handleShowProfile);
     
-    connect(m_topicViewWidget, &TopicViewWidget::startTestRequested,
+    connect(m_topicViewWidget, &TopicViewWidget::startTestRequested,  // Подключение сигнала
             this, &AppController::handleStartTest);
-    connect(m_topicViewWidget, &TopicViewWidget::backRequested,
+    connect(m_topicViewWidget, &TopicViewWidget::backRequested,  // Подключение сигнала
             this, [this]() { switchToView(m_topicWidget); });
-    connect(m_topicViewWidget, &TopicViewWidget::progressUpdateRequested,
+    connect(m_topicViewWidget, &TopicViewWidget::progressUpdateRequested,  // Подключение сигнала
             this, &AppController::handleProgressUpdate);
     
-    connect(m_testWidget, &TestWidget::answerSubmitted,
+    connect(m_testWidget, &TestWidget::answerSubmitted,  // Подключение сигнала
             this, &AppController::handleAnswerSubmitted);
-    connect(m_testWidget, &TestWidget::testFinished,
+    connect(m_testWidget, &TestWidget::testFinished,  // Подключение сигнала
             this, [this](int score, int maxScore, bool timeExpired) {
                 QString message  =  QString("Тест завершен!\nПравильных ответов: %1 из %2\nПроцент: %3%")
-                    .arg(score).arg(maxScore).arg(qRound((double)score / maxScore * 100));
+                    .arg(score).arg(maxScore).arg(qRound((double)score / maxScore* 100));
                 
-                if (timeExpired) {
+                if (timeExpired) {  // Проверка условия
                     message.prepend("Время истекло!\n");
                 }
                 
+/*!
+ * @brief Выполняет основную операцию
+ * @param теста" Параметр функции
+ * @param message Входной параметр
+ * @return Результат выполнения
+ */
                 emit showMessage("Результат теста", message);
                 switchToView(m_topicWidget);
             });
     
-    connect(m_profileWidget, &StudentProfileWidget::backRequested,
+    connect(m_profileWidget, &StudentProfileWidget::backRequested,  // Подключение сигнала
             this, [this]() { switchToView(m_topicWidget); });
 }
 
 void AppController::handleUserAuthenticated(const User& user) {
     m_sessionManager.setCurrentUser(user);
     
-    if (user.isAdmin()) {
+    if (user.isAdmin()) {  // Проверка условия
         
-        if (!m_adminWidget) {
+        if (!m_adminWidget) {  // Проверка условия
             
-            m_adminWidget  =  new AdminWidget(nullptr, m_stackedWidget);
+/*!
+ * @brief Возвращает значение
+ * @param nullptr Входной параметр
+ * @param m_stackedWidget Входной параметр
+ * @return Результат выполнения
+ */
+            m_adminWidget  =  new AdminWidget(nullptr, m_stackedWidget);  // Создание объекта
             m_stackedWidget->addWidget(m_adminWidget);
             
-            connect(m_adminWidget, &AdminWidget::backRequested,
+            connect(m_adminWidget, &AdminWidget::backRequested,  // Подключение сигнала
                     this, &AppController::handleAdminBack);
         }
         
@@ -135,7 +187,7 @@ void AppController::handleUserAuthenticated(const User& user) {
     } else {
         
         int lastTopicId  =  loadStudentProgress(user.id);
-        if (lastTopicId  >=  0) {
+        if (lastTopicId  >=  0) {  // Проверка условия
             m_topicWidget->setLastStudiedTopic(lastTopicId);
         }
         
@@ -151,6 +203,11 @@ void AppController::handleLogout() {
 void AppController::handleTopicSelected(int topicIndex) {
     const Topic* topic  =  m_courseModel->getTopic(topicIndex);
     if (!topic) {
+/*!
+ * @brief Выполняет основную операцию
+ * @param найдена" Параметр функции
+ * @return Результат выполнения
+ */
         emit errorOccurred("Тема не найдена");
         return;
     }
@@ -160,14 +217,19 @@ void AppController::handleTopicSelected(int topicIndex) {
     switchToView(m_topicViewWidget);
     
     User currentUser  =  m_sessionManager.getCurrentUser();
-    if (currentUser.isValid() && !currentUser.isAdmin()) {
+    if (currentUser.isValid() && !currentUser.isAdmin()) {  // Проверка условия
         saveStudentProgress(currentUser.id, topicIndex);
     }
 }
 
 void AppController::handleStartTest() {
     const Topic* topic  =  m_courseModel->getTopic(m_currentTopicIndex);
-    if (!topic || topic->questions.isEmpty()) {
+    if (!topic || topic->questions.isEmpty()) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param теме" Параметр функции
+ * @return Результат выполнения
+ */
         emit errorOccurred("Нет вопросов для тестирования по данной теме");
         return;
     }
@@ -177,14 +239,14 @@ void AppController::handleStartTest() {
 
 void AppController::handleAnswerSubmitted(int answerIndex) {
     const Topic* topic  =  m_courseModel->getTopic(m_currentTopicIndex);
-    if (!topic || m_currentQuestionIndex  >=  topic->questions.size()) {
+    if (!topic || m_currentQuestionIndex  >=  topic->questions.size()) {  // Проверка условия
         return;
     }
     
     m_userAnswers.append(answerIndex);
     
     const Question& question  =  topic->questions[m_currentQuestionIndex];
-    if (answerIndex  ==  question.correctIndex) {
+    if (answerIndex  ==  question.correctIndex) {  // Проверка условия
         m_correctAnswers++;
     }
     
@@ -194,16 +256,26 @@ void AppController::handleAnswerSubmitted(int answerIndex) {
 
 void AppController::handleShowProfile() {
     User currentUser  =  m_sessionManager.getCurrentUser();
-    if (!currentUser.isValid()) {
+    if (!currentUser.isValid()) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param авторизован" Параметр функции
+ * @return Результат выполнения
+ */
         emit errorOccurred("Пользователь не авторизован");
         return;
     }
     
-    if (m_testResultsModel->loadUserResults(currentUser.id)) {
+    if (m_testResultsModel->loadUserResults(currentUser.id)) {  // Проверка условия
         m_profileWidget->setUser(currentUser);
         m_profileWidget->setResultsModel(m_testResultsModel);
         switchToView(m_profileWidget);
     } else {
+/*!
+ * @brief Выполняет основную операцию
+ * @param тестов" Параметр функции
+ * @return Результат выполнения
+ */
         emit errorOccurred("Не удалось загрузить результаты тестов");
     }
 }
@@ -214,12 +286,18 @@ void AppController::handleAdminBack() {
 
 void AppController::handleTestTimeout() {
     finishTest();
+/*!
+ * @brief Выполняет основную операцию
+ * @param истекло" Параметр функции
+ * @param автоматически." Параметр функции
+ * @return Результат выполнения
+ */
     emit showMessage("Время истекло", "Время тестирования истекло. Тест завершен автоматически.");
 }
 
 void AppController::handleProgressUpdate(int topicIndex) {
     User currentUser  =  m_sessionManager.getCurrentUser();
-    if (currentUser.isValid() && !currentUser.isAdmin()) {
+    if (currentUser.isValid() && !currentUser.isAdmin()) {  // Проверка условия
         saveStudentProgress(currentUser.id, topicIndex);
     }
 }
@@ -233,7 +311,7 @@ void AppController::handleTestResultsError(const QString& errorMessage) {
 }
 
 void AppController::switchToView(QWidget* widget) {
-    if (widget && m_stackedWidget) {
+    if (widget && m_stackedWidget) {  // Проверка условия
         m_stackedWidget->setCurrentWidget(widget);
     }
 }
@@ -263,7 +341,7 @@ void AppController::finishTest() {
     }
     
     User currentUser  =  m_sessionManager.getCurrentUser();
-    if (currentUser.isValid()) {
+    if (currentUser.isValid()) {  // Проверка условия
         m_testResultsModel->saveTestResult(currentUser.id, m_correctAnswers, topic->questions.size());
     }
     
@@ -272,6 +350,12 @@ void AppController::finishTest() {
         .arg(topic->questions.size())
         .arg(qRound((double)m_correctAnswers / topic->questions.size() * 100));
     
+/*!
+ * @brief Выполняет основную операцию
+ * @param теста" Параметр функции
+ * @param message Входной параметр
+ * @return Результат выполнения
+ */
     emit showMessage("Результат теста", message);
     switchToView(m_topicWidget);
 }
@@ -282,7 +366,7 @@ void AppController::showNextQuestion() {
         return;
     }
     
-    if (m_currentQuestionIndex  >=  topic->questions.size()) {
+    if (m_currentQuestionIndex  >=  topic->questions.size()) {  // Проверка условия
         
         finishTest();
         return;
@@ -293,14 +377,14 @@ void AppController::showNextQuestion() {
 }
 
 bool AppController::saveStudentProgress(int userId, int topicId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         return false;
     }
     
     QSqlQuery query(dbManager.database());
     
-    query.prepare(R"(
+    query.prepare(R"(  // Выполнение SQL запроса
         INSERT INTO progress (user_id, last_topic_id, updated_at) 
         VALUES (?, ?, CURRENT_TIMESTAMP)
         ON CONFLICT (user_id) 
@@ -310,7 +394,7 @@ bool AppController::saveStudentProgress(int userId, int topicId) {
     query.addBindValue(userId);
     query.addBindValue(topicId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qWarning() << "Failed to save student progress:" << query.lastError().text();
         return false;
     }
@@ -319,21 +403,21 @@ bool AppController::saveStudentProgress(int userId, int topicId) {
 }
 
 int AppController::loadStudentProgress(int userId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         return -1;
     }
     
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT last_topic_id FROM progress WHERE user_id  =  ?");
+    query.prepare("SELECT last_topic_id FROM progress WHERE user_id  =  ?");  // Выполнение SQL запроса
     query.addBindValue(userId);
     
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qWarning() << "Failed to load student progress:" << query.lastError().text();
         return -1;
     }
     
-    if (query.next()) {
+    if (query.next()) {  // Проверка условия
         return query.value(0).toInt();
     }
     

@@ -10,7 +10,7 @@ bool CourseDataConverter::convertJsonToBinary(const QString& jsonFilePath, const
     
     Course course  =  parseJsonFile(jsonFilePath);
     
-    if (course.topics.isEmpty()) {
+    if (course.topics.isEmpty()) {  // Проверка условия
         qCritical() << "Failed to parse JSON file or course is empty:" << jsonFilePath;
         return false;
     }
@@ -29,8 +29,13 @@ bool CourseDataConverter::convertJsonToBinary(const QString& jsonFilePath, const
 Course CourseDataConverter::parseJsonFile(const QString& jsonFilePath) {
     Course course;
     
+/*!
+ * @brief Выполняет основную операцию
+ * @param jsonFilePath Входной параметр
+ * @return Результат выполнения
+ */
     QFile file(jsonFilePath);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly)) {  // Проверка условия
         qCritical() << "Cannot open JSON file:" << jsonFilePath;
         return course;
     }
@@ -41,7 +46,7 @@ Course CourseDataConverter::parseJsonFile(const QString& jsonFilePath) {
     QJsonParseError parseError;
     QJsonDocument doc  =  QJsonDocument::fromJson(jsonData, &parseError);
     
-    if (parseError.error  !=  QJsonParseError::NoError) {
+    if (parseError.error  !=  QJsonParseError::NoError) {  // Проверка условия
         qCritical() << "JSON parse error:" << parseError.errorString();
         return course;
     }
@@ -49,7 +54,7 @@ Course CourseDataConverter::parseJsonFile(const QString& jsonFilePath) {
     QJsonObject rootObj  =  doc.object();
     QJsonArray topicsArray  =  rootObj["topics"].toArray();
     
-    for (const QJsonValue& topicValue : topicsArray) {
+    for (const QJsonValue& topicValue : topicsArray) {  // Цикл обработки данных
         QJsonObject topicObj  =  topicValue.toObject();
         
         Topic topic;
@@ -57,7 +62,7 @@ Course CourseDataConverter::parseJsonFile(const QString& jsonFilePath) {
         topic.htmlContent  =  topicObj["htmlContent"].toString();
         
         QJsonArray questionsArray  =  topicObj["questions"].toArray();
-        for (const QJsonValue& questionValue : questionsArray) {
+        for (const QJsonValue& questionValue : questionsArray) {  // Цикл обработки данных
             QJsonObject questionObj  =  questionValue.toObject();
             
             Question question;
@@ -65,7 +70,7 @@ Course CourseDataConverter::parseJsonFile(const QString& jsonFilePath) {
             question.correctIndex  =  questionObj["correctIndex"].toInt();
             
             QJsonArray variantsArray  =  questionObj["variants"].toArray();
-            for (const QJsonValue& variantValue : variantsArray) {
+            for (const QJsonValue& variantValue : variantsArray) {  // Цикл обработки данных
                 question.variants.append(variantValue.toString());
             }
             

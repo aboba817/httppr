@@ -30,11 +30,11 @@ bool SessionManager::isCourseLoaded() const {
 }
 
 void SessionManager::startTopic(int topicIndex) {
-    if (!m_isLoaded) {
+    if (!m_isLoaded) {  // Проверка условия
         throw std::runtime_error("Course not loaded");
     }
     
-    if (topicIndex < 0 || topicIndex  >=  currentCourse.topics.size()) {
+    if (topicIndex < 0 || topicIndex  >=  currentCourse.topics.size()) {  // Проверка условия
         throw std::runtime_error("Invalid topic index");
     }
 
@@ -52,7 +52,7 @@ Course& SessionManager::getMutableCourse() {
 }
 
 Topic* SessionManager::getCurrentTopic() {
-    if (!m_isLoaded || currentTopicIndex < 0 || currentTopicIndex  >=  currentCourse.topics.size()) {
+    if (!m_isLoaded || currentTopicIndex < 0 || currentTopicIndex  >=  currentCourse.topics.size()) {  // Проверка условия
         return nullptr;
     }
     return &currentCourse.topics[currentTopicIndex];
@@ -62,7 +62,7 @@ Question* SessionManager::getCurrentQuestion() {
     Topic* topic  =  getCurrentTopic();
     if (!topic) return nullptr;
 
-    if (currentQuestionIndex < 0 || currentQuestionIndex  >=  topic->questions.size()) {
+    if (currentQuestionIndex < 0 || currentQuestionIndex  >=  topic->questions.size()) {  // Проверка условия
         return nullptr;
     }
     return &topic->questions[currentQuestionIndex];
@@ -70,30 +70,30 @@ Question* SessionManager::getCurrentQuestion() {
 
 SessionManager::SubmitResult SessionManager::submitAnswer(int answerIndex) {
     
-    if (!m_isLoaded) {
+    if (!m_isLoaded) {  // Проверка условия
         throw std::runtime_error("Cannot submit answer: course not loaded");
     }
 
     Topic* topic  =  getCurrentTopic();
     Question* question  =  getCurrentQuestion();
 
-    if (!topic || !question) {
+    if (!topic || !question) {  // Проверка условия
         throw std::runtime_error("Cannot submit answer: invalid topic or question state");
     }
 
-    if (answerIndex < 0 || answerIndex  >=  question->variants.size()) {
+    if (answerIndex < 0 || answerIndex  >=  question->variants.size()) {  // Проверка условия
         return SubmitResult::Wrong;
     }
 
-    if (question->correctIndex < 0 || question->correctIndex  >=  question->variants.size()) {
+    if (question->correctIndex < 0 || question->correctIndex  >=  question->variants.size()) {  // Проверка условия
         return SubmitResult::Wrong;
     }
 
-    if (answerIndex  ==  question->correctIndex) {
+    if (answerIndex  ==  question->correctIndex) {  // Проверка условия
         currentQuestionIndex++;
 
-        if (currentQuestionIndex  >=  topic->questions.size()) {
-            if (currentTopicIndex  >=  currentCourse.topics.size() - 1) {
+        if (currentQuestionIndex  >=  topic->questions.size()) {  // Проверка условия
+            if (currentTopicIndex  >=  currentCourse.topics.size() - 1) {  // Проверка условия
                 return SubmitResult::CourseFinished;
             }
             return SubmitResult::TopicFinished;
@@ -101,7 +101,7 @@ SessionManager::SubmitResult SessionManager::submitAnswer(int answerIndex) {
         return SubmitResult::Correct;
     } else {
         errorsInTopic++;
-        if (errorsInTopic  >=  MAX_ERRORS) {
+        if (errorsInTopic  >=  MAX_ERRORS) {  // Проверка условия
             currentQuestionIndex  =  0;
             errorsInTopic  =  0;
             return SubmitResult::FailRelearn;
@@ -112,7 +112,7 @@ SessionManager::SubmitResult SessionManager::submitAnswer(int answerIndex) {
 
 void SessionManager::setCurrentUser(const User& user) {
     m_currentUser  =  user;
-    if (user.isValid()) {
+    if (user.isValid()) {  // Проверка условия
         loadProgress();
     }
 }
@@ -133,12 +133,12 @@ void SessionManager::clearSession() {
 }
 
 bool SessionManager::saveProgress() {
-    if (!hasUser() || !DatabaseManager::instance().isConnected()) {
+    if (!hasUser() || !DatabaseManager::instance().isConnected()) {  // Проверка условия
         return false;
     }
 
-    QSqlQuery query(DatabaseManager::instance().database());
-    query.prepare(R"(
+    QSqlQuery query(DatabaseManager::instance().database());  // Работа с базой данных
+    query.prepare(R"(  // Выполнение SQL запроса
         INSERT INTO progress (user_id, last_topic_id, updated_at) 
         VALUES (?, ?, CURRENT_TIMESTAMP)
         ON CONFLICT (user_id) 
@@ -149,7 +149,7 @@ bool SessionManager::saveProgress() {
     query.addBindValue(currentTopicIndex);
     query.addBindValue(currentTopicIndex);
 
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to save progress:" << query.lastError().text();
         return false;
     }
@@ -159,24 +159,24 @@ bool SessionManager::saveProgress() {
 }
 
 bool SessionManager::loadProgress() {
-    if (!hasUser() || !DatabaseManager::instance().isConnected()) {
+    if (!hasUser() || !DatabaseManager::instance().isConnected()) {  // Проверка условия
         return false;
     }
 
-    QSqlQuery query(DatabaseManager::instance().database());
-    query.prepare("SELECT last_topic_id FROM progress WHERE user_id  =  ?");
+    QSqlQuery query(DatabaseManager::instance().database());  // Работа с базой данных
+    query.prepare("SELECT last_topic_id FROM progress WHERE user_id  =  ?");  // Выполнение SQL запроса
     query.addBindValue(m_currentUser.id);
 
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to load progress:" << query.lastError().text();
         return false;
     }
 
-    if (query.next()) {
+    if (query.next()) {  // Проверка условия
         int lastTopicId  =  query.value("last_topic_id").toInt();
         qDebug() << "Loaded progress for user" << m_currentUser.login << "last topic" << lastTopicId;
         
-        if (m_isLoaded && lastTopicId  >=  0 && lastTopicId < currentCourse.topics.size()) {
+        if (m_isLoaded && lastTopicId  >=  0 && lastTopicId < currentCourse.topics.size()) {  // Проверка условия
             currentTopicIndex  =  lastTopicId;
             currentQuestionIndex  =  0;
             errorsInTopic  =  0;

@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл LoginWidget.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -16,50 +12,89 @@
 #include <QMessageBox>
 #include <QRegularExpressionValidator>
 
-/**
- * Виджет авторизации пользователей в системе.
+/*!
+ * @brief Реализует функциональность класса LoginWidget
  */
 class LoginWidget : public QWidget {
     Q_OBJECT
 
 public:
     
-    explicit LoginWidget(QWidget *parent  =  nullptr);
+/*!
+ * @brief Возвращает значение
+ * @param nullptr Входной параметр
+ * @return Результат выполнения
+ */
+    explicit LoginWidget(QWidget* parent  =  nullptr);
 
 signals:
     
+/*!
+ * @brief Выполняет основную операцию
+ * @param user Входной параметр
+ */
     void userAuthenticated(const User& user);
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param password Входной параметр
+ */
     void adminLoginAttempt(QString password);
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void startStudentSession();
 
 private slots:
     
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onLoginClicked();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onRegisterClicked();
 
+/*!
+ * @brief Выполняет основную операцию
+ */
     void onAdminLoginClicked();
 
 private:
     
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createLoginTab();
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createRegisterTab();
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     QWidget* createQuickAccessTab();
 
     bool validateInput(const QString& login, const QString& password, const QString& fullName  =  QString());
 
-    /**
-     * Отображает элемент интерфейса.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @param message Входной параметр
+ */
     void showError(const QString& message);
 
-    /**
-     * Отображает элемент интерфейса.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @param message Входной параметр
+ */
     void showSuccess(const QString& message);
 
     QTabWidget* m_tabWidget;

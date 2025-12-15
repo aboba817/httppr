@@ -10,26 +10,26 @@
 
 AuthService::AuthResult AuthService::login(const QString& login, const QString& password, User& user) {
     
-    if (login.trimmed().isEmpty() || password.isEmpty()) {
+    if (login.trimmed().isEmpty() || password.isEmpty()) {  // Проверка условия
         return AuthResult::InvalidCredentials;
     }
 
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qCritical() << "Database not connected for authentication";
         return AuthResult::DatabaseError;
     }
 
     QSqlQuery query(dbManager.database());
-    query.prepare("SELECT id, login, password_hash, full_name, role FROM users WHERE login  =  ?");
+    query.prepare("SELECT id, login, password_hash, full_name, role FROM users WHERE login  =  ?");  // Выполнение SQL запроса
     query.addBindValue(login.trimmed());
 
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         qCritical() << "Failed to execute login query:" << query.lastError().text();
         return AuthResult::DatabaseError;
     }
 
-    if (!query.next()) {
+    if (!query.next()) {  // Проверка условия
         qDebug() << "User not found:" << login;
         return AuthResult::UserNotFound;
     }
@@ -41,7 +41,7 @@ AuthService::AuthResult AuthService::login(const QString& login, const QString& 
     QString role  =  query.value("role").toString();
 
     QString inputHash  =  calculateSha256(password);
-    if (inputHash  !=  storedHash) {
+    if (inputHash  !=  storedHash) {  // Проверка условия
         qDebug() << "Invalid password for user:" << login;
         return AuthResult::InvalidCredentials;
     }
@@ -55,23 +55,23 @@ AuthService::AuthResult AuthService::login(const QString& login, const QString& 
 AuthService::RegisterResult AuthService::registerUser(const QString& login, const QString& password, 
                                                     const QString& fullName, const QString& role) {
     
-    if (login.trimmed().isEmpty() || password.isEmpty() || fullName.trimmed().isEmpty()) {
-        Logger::warning("Попытка регистрации с пустыми полями", "Auth");
+    if (login.trimmed().isEmpty() || password.isEmpty() || fullName.trimmed().isEmpty()) {  // Проверка условия
+        Logger::warning("Попытка регистрации с пустыми полями", "Auth");  // Логирование события
         return RegisterResult::InvalidInput;
     }
 
-    if (!isLoginValid(login)) {
-        Logger::warning("Попытка регистрации с невалидным логином: " + login, "Auth");
+    if (!isLoginValid(login)) {  // Проверка условия
+        Logger::warning("Попытка регистрации с невалидным логином: " + login, "Auth");  // Логирование события
         return RegisterResult::InvalidInput;
     }
 
-    if (!isPasswordStrong(password)) {
-        Logger::warning("Попытка регистрации со слабым паролем для пользователя: " + login, "Auth");
+    if (!isPasswordStrong(password)) {  // Проверка условия
+        Logger::warning("Попытка регистрации со слабым паролем для пользователя: " + login, "Auth");  // Логирование события
         return RegisterResult::InvalidInput;
     }
 
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
         qCritical() << "Database not connected for registration";
         return RegisterResult::DatabaseError;
     }
@@ -80,12 +80,12 @@ AuthService::RegisterResult AuthService::registerUser(const QString& login, cons
     checkQuery.prepare("SELECT COUNT(*) FROM users WHERE login  =  ?");
     checkQuery.addBindValue(login.trimmed());
     
-    if (!checkQuery.exec()) {
+    if (!checkQuery.exec()) {  // Проверка условия
         qCritical() << "Failed to check user existence:" << checkQuery.lastError().text();
         return RegisterResult::DatabaseError;
     }
     
-    if (checkQuery.next() && checkQuery.value(0).toInt() > 0) {
+    if (checkQuery.next() && checkQuery.value(0).toInt() > 0) {  // Проверка условия
         qDebug() << "User already exists:" << login;
         return RegisterResult::UserExists;
     }
@@ -99,7 +99,7 @@ AuthService::RegisterResult AuthService::registerUser(const QString& login, cons
     insertQuery.addBindValue(fullName.trimmed());
     insertQuery.addBindValue(role);
 
-    if (!insertQuery.exec()) {
+    if (!insertQuery.exec()) {  // Проверка условия
         qCritical() << "Failed to register user:" << insertQuery.lastError().text();
         return RegisterResult::DatabaseError;
     }
@@ -124,7 +124,7 @@ QString AuthService::calculateSha256(const QString& input) {
 
 bool AuthService::isPasswordStrong(const QString& password) {
     
-    if (password.length() < 4) {
+    if (password.length() < 4) {  // Проверка условия
         return false;
     }
 
@@ -133,10 +133,15 @@ bool AuthService::isPasswordStrong(const QString& password) {
 
 bool AuthService::isLoginValid(const QString& login) {
     
-    if (login.length() < 3 || login.length() > 20) {
+    if (login.length() < 3 || login.length() > 20) {  // Проверка условия
         return false;
     }
 
+/*!
+ * @brief Выполняет основную операцию
+ * 
+ * @return Результат выполнения
+ */
     QRegularExpression loginRegex("^[a-zA-Z0-9_]+$");
     return loginRegex.match(login).hasMatch();
 }

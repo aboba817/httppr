@@ -1,7 +1,3 @@
-/**
- * Реализация функций и методов для системы HTTP Proxy Course.
- * Файл содержит основную логику работы компонентов приложения.
- */
 
 #include "mainwindow.h"
 #include "Serializer.h"
@@ -12,26 +8,21 @@
 #include <QFile>
 #include <QDebug>
 
-/**
- * Главная точка входа в приложение HTTP Proxy Course.
- * Инициализирует систему логирования, проверяет наличие данных курса,
- * подключается к базе данных и запускает главное окно приложения.
- *
- * @param argc Количество аргументов командной строки.
- * @param argv Массив аргументов командной строки.
- * @return Код завершения приложения.
+/*!
+ * @brief Главная точка входа в приложение
+ * @param argc Количество аргументов командной строки
+ * @param argv Массив аргументов командной строки
+ * @return Код завершения приложения
  */
-int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
+int main(int argc, char* argv[]) {
+    QApplication a(argc, argv);  // Инициализация Qt приложения
     
-    // Инициализация системы логирования
-    Logger::setFileLogging(true, "application.log");
-    Logger::info("Запуск приложения HTTP Proxy Course", "Main");
+    Logger::setFileLogging(true, "application.log");  // Логирование события
+    Logger::info("Запуск приложения HTTP Proxy Course", "Main");  // Логирование события
     
     const QString courseDataFile = "course.dat";
     
-    // Проверка наличия файла данных курса и создание при необходимости
-    if (!QFile::exists(courseDataFile)) {
+    if (!QFile::exists(courseDataFile)) {  // Проверка условия
         qDebug() << "Course data file not found. Generating binary course data...";
         try {
             Serializer::generateCourseData(courseDataFile);
@@ -44,13 +35,12 @@ int main(int argc, char *argv[]) {
         qDebug() << "Binary course data file found:" << courseDataFile;
     }
     
-    // Инициализация подключения к базе данных
-    DatabaseManager& dbManager = DatabaseManager::instance();
-    if (!dbManager.connectDb()) {
+    DatabaseManager& dbManager = DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.connectDb()) {  // Проверка условия
         qCritical() << "Failed to connect to database. Application will continue with limited functionality.";
     } else {
         qDebug() << "Database connected successfully";
-        if (!dbManager.initSchema()) {
+        if (!dbManager.initSchema()) {  // Проверка условия
             qCritical() << "Failed to initialize database schema. Application will continue with limited functionality.";
         } else {
             qDebug() << "Database schema initialized successfully";
@@ -60,10 +50,10 @@ int main(int argc, char *argv[]) {
     MainWindow w;
     w.show();
     
-    Logger::info("Главное окно отображено", "Main");
+    Logger::info("Главное окно отображено", "Main");  // Логирование события
     
-    int result = a.exec();
+    int result = a.exec();  // Запуск главного цикла приложения
     
-    Logger::info("Завершение работы приложения", "Main");
+    Logger::info("Завершение работы приложения", "Main");  // Логирование события
     return result;
 }

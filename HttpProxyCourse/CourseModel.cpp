@@ -12,10 +12,19 @@ CourseModel::CourseModel(QObject* parent) : QObject(parent) {
 bool CourseModel::loadCourse(const QString& filePath) {
     try {
         m_course  =  Serializer::load(filePath);
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
         emit courseDataChanged();
         return true;
     } catch (const std::exception& e) {
         QString errorMsg  =  QString("Ошибка загрузки курса: %1").arg(e.what());
+/*!
+ * @brief Выполняет основную операцию
+ * @param errorMsg Входной параметр
+ * @return Результат выполнения
+ */
         emit errorOccurred(errorMsg);
         qCritical() << errorMsg;
         return false;
@@ -28,6 +37,11 @@ bool CourseModel::saveCourse(const QString& filePath) {
         return true;
     } catch (const std::exception& e) {
         QString errorMsg  =  QString("Ошибка сохранения курса: %1").arg(e.what());
+/*!
+ * @brief Выполняет основную операцию
+ * @param errorMsg Входной параметр
+ * @return Результат выполнения
+ */
         emit errorOccurred(errorMsg);
         qCritical() << errorMsg;
         return false;
@@ -39,7 +53,7 @@ int CourseModel::getTopicCount() const {
 }
 
 const Topic* CourseModel::getTopic(int index) const {
-    if (index < 0 || index  >=  m_course.topics.size()) {
+    if (index < 0 || index  >=  m_course.topics.size()) {  // Проверка условия
         return nullptr;
     }
     return &m_course.topics[index];
@@ -47,30 +61,42 @@ const Topic* CourseModel::getTopic(int index) const {
 
 void CourseModel::addTopic(const Topic& topic) {
     m_course.topics.append(topic);
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     emit courseDataChanged();
 }
 
 bool CourseModel::updateTopic(int index, const Topic& topic) {
-    if (index < 0 || index  >=  m_course.topics.size()) {
+    if (index < 0 || index  >=  m_course.topics.size()) {  // Проверка условия
         return false;
     }
     m_course.topics[index]  =  topic;
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     emit courseDataChanged();
     return true;
 }
 
 bool CourseModel::removeTopic(int index) {
-    if (index < 0 || index  >=  m_course.topics.size()) {
+    if (index < 0 || index  >=  m_course.topics.size()) {  // Проверка условия
         return false;
     }
     m_course.topics.removeAt(index);
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     emit courseDataChanged();
     return true;
 }
 
 QStringList CourseModel::getTopicTitles() const {
     QStringList titles;
-    for (const Topic& topic : m_course.topics) {
+    for (const Topic& topic : m_course.topics) {  // Цикл обработки данных
         titles << topic.title;
     }
     return titles;
@@ -85,8 +111,13 @@ TestResultsModel::TestResultsModel(QObject* parent) : QSqlQueryModel(parent) {
 }
 
 bool TestResultsModel::loadUserResults(int userId) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param подключена" Параметр функции
+ * @return Результат выполнения
+ */
         emit databaseError("База данных не подключена");
         return false;
     }
@@ -103,11 +134,16 @@ bool TestResultsModel::loadUserResults(int userId) {
     )";
 
     QSqlQuery query(dbManager.database());
-    query.prepare(queryStr);
+    query.prepare(queryStr);  // Выполнение SQL запроса
     query.addBindValue(userId);
 
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         QString errorMsg  =  QString("Ошибка загрузки результатов: %1").arg(query.lastError().text());
+/*!
+ * @brief Выполняет основную операцию
+ * @param errorMsg Входной параметр
+ * @return Результат выполнения
+ */
         emit databaseError(errorMsg);
         return false;
     }
@@ -117,8 +153,13 @@ bool TestResultsModel::loadUserResults(int userId) {
 }
 
 bool TestResultsModel::loadAllResults() {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param подключена" Параметр функции
+ * @return Результат выполнения
+ */
         emit databaseError("База данных не подключена");
         return false;
     }
@@ -137,8 +178,13 @@ bool TestResultsModel::loadAllResults() {
     )";
 
     QSqlQuery query(dbManager.database());
-    if (!query.exec(queryStr)) {
+    if (!query.exec(queryStr)) {  // Проверка условия
         QString errorMsg  =  QString("Ошибка загрузки всех результатов: %1").arg(query.lastError().text());
+/*!
+ * @brief Выполняет основную операцию
+ * @param errorMsg Входной параметр
+ * @return Результат выполнения
+ */
         emit databaseError(errorMsg);
         return false;
     }
@@ -148,14 +194,19 @@ bool TestResultsModel::loadAllResults() {
 }
 
 bool TestResultsModel::saveTestResult(int userId, int score, int maxScore) {
-    DatabaseManager& dbManager  =  DatabaseManager::instance();
-    if (!dbManager.isConnected()) {
+    DatabaseManager& dbManager  =  DatabaseManager::instance();  // Работа с базой данных
+    if (!dbManager.isConnected()) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param подключена" Параметр функции
+ * @return Результат выполнения
+ */
         emit databaseError("База данных не подключена");
         return false;
     }
 
     QSqlQuery query(dbManager.database());
-    query.prepare(R"(
+    query.prepare(R"(  // Выполнение SQL запроса
         INSERT INTO test_results (user_id, score, max_score) 
         VALUES (?, ?, ?)
     )");
@@ -164,8 +215,13 @@ bool TestResultsModel::saveTestResult(int userId, int score, int maxScore) {
     query.addBindValue(score);
     query.addBindValue(maxScore);
 
-    if (!query.exec()) {
+    if (!query.exec()) {  // Проверка условия
         QString errorMsg  =  QString("Ошибка сохранения результата: %1").arg(query.lastError().text());
+/*!
+ * @brief Выполняет основную операцию
+ * @param errorMsg Входной параметр
+ * @return Результат выполнения
+ */
         emit databaseError(errorMsg);
         return false;
     }
@@ -191,7 +247,7 @@ void TestResultsFilterModel::setNameFilter(const QString& surname) {
 }
 
 bool TestResultsFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const {
-    if (m_nameFilter.isEmpty()) {
+    if (m_nameFilter.isEmpty()) {  // Проверка условия
         return true; 
     }
 

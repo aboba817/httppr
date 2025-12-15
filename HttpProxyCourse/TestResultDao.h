@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл TestResultDao.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -9,6 +5,9 @@
 #include <QDateTime>
 #include <QList>
 
+/*!
+ * @brief Представляет структуру данных TestResult
+ */
 struct TestResult {
     int id;                  
     int userId;              
@@ -26,24 +25,41 @@ struct TestResult {
     }
 };
 
-/**
- * Объект доступа к данным результатов тестирования.
+/*!
+ * @brief Реализует функциональность класса TestResultDao
  */
 class TestResultDao {
 public:
     
-    /**
-     * Сохраняет данные в хранилище.
-     */
+/*!
+ * @brief Сохраняет данные
+ * @param result Входной параметр
+ * @return Результат выполнения
+ */
     static bool save(const TestResult& result);
 
     static QList<TestResult> findByUserId(int userId);
 
     static QList<TestResult> findAll();
 
+/*!
+ * @brief Возвращает значение
+ * @param userId Входной параметр
+ * @return Результат выполнения
+ */
     static TestResult getBestResult(int userId);
 
+/*!
+ * @brief Возвращает значение
+ * @param userId Входной параметр
+ * @return Результат выполнения
+ */
     static double getAverageScore(int userId);
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param userId Входной параметр
+ * @return Результат выполнения
+ */
     static bool deleteByUserId(int userId);
 };

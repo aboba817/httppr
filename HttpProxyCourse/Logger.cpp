@@ -2,12 +2,17 @@
 #include <QMutex>
 #include <QMutexLocker>
 
-bool Logger::s_fileLoggingEnabled  =  false;
-QString Logger::s_logFilePath  =  "application.log";
+bool Logger::s_fileLoggingEnabled  =  false;  // Логирование события
+QString Logger::s_logFilePath  =  "application.log";  // Логирование события
 
 static QMutex s_logMutex;
 
-void Logger::log(Level level, const QString& message, const QString& category) {
+void Logger::log(Level level, const QString& message, const QString& category) {  // Логирование события
+/*!
+ * @brief Выполняет основную операцию
+ * @param s_logMutex Входной параметр
+ * @return Результат выполнения
+ */
     QMutexLocker locker(&s_logMutex);
     
     QString timestamp  =  QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
@@ -36,9 +41,19 @@ void Logger::log(Level level, const QString& message, const QString& category) {
             break;
     }
     
-    if (s_fileLoggingEnabled) {
+    if (s_fileLoggingEnabled) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param s_logFilePath Входной параметр
+ * @return Результат выполнения
+ */
         QFile logFile(s_logFilePath);
-        if (logFile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        if (logFile.open(QIODevice::WriteOnly | QIODevice::Append)) {  // Проверка условия
+/*!
+ * @brief Выполняет основную операцию
+ * @param logFile Входной параметр
+ * @return Результат выполнения
+ */
             QTextStream stream(&logFile);
             stream << logLine << Qt::endl;
             logFile.close();
@@ -46,7 +61,12 @@ void Logger::log(Level level, const QString& message, const QString& category) {
     }
 }
 
-void Logger::setFileLogging(bool enabled, const QString& filePath) {
+void Logger::setFileLogging(bool enabled, const QString& filePath) {  // Логирование события
+/*!
+ * @brief Выполняет основную операцию
+ * @param s_logMutex Входной параметр
+ * @return Результат выполнения
+ */
     QMutexLocker locker(&s_logMutex);
     s_fileLoggingEnabled  =  enabled;
     s_logFilePath  =  filePath;
@@ -58,7 +78,7 @@ void Logger::setFileLogging(bool enabled, const QString& filePath) {
     }
 }
 
-QString Logger::levelToString(Level level) {
+QString Logger::levelToString(Level level) {  // Логирование события
     switch (level) {
         case Level::Debug:    return "DEBUG";
         case Level::Info:     return "INFO ";

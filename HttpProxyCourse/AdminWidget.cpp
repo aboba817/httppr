@@ -33,9 +33,20 @@ void AdminWidget::setCurrentUser(const User& user) {
 }
 
 void AdminWidget::setupUi() {
-    m_layout  =  new QVBoxLayout(this);
+/*!
+ * @brief Выполняет основную операцию
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_layout  =  new QVBoxLayout(this);  // Создание объекта
 
-    QLabel* titleLabel  =  new QLabel("Панель Администратора", this);
+/*!
+ * @brief Выполняет основную операцию
+ * @param Администратора" Параметр функции
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    QLabel* titleLabel  =  new QLabel("Панель Администратора", this);  // Создание объекта
     QFont titleFont  =  titleLabel->font();
     titleFont.setBold(true);
     titleFont.setPointSize(16);
@@ -43,23 +54,49 @@ void AdminWidget::setupUi() {
     titleLabel->setAlignment(Qt::AlignCenter);
     m_layout->addWidget(titleLabel);
 
-    m_tabWidget  =  new QTabWidget(this);
+/*!
+ * @brief Возвращает значение
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_tabWidget  =  new QTabWidget(this);  // Создание объекта
     m_tabWidget->addTab(createCourseEditTab(), "Редактирование курса");
     m_tabWidget->addTab(createStudentStatisticsTab(), "Статистика студентов");
     
     m_layout->addWidget(m_tabWidget);
 
-    m_btnLogout  =  new QPushButton("← Выйти", this);
+/*!
+ * @brief Выполняет основную операцию
+ * @param Выйти" Параметр функции
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_btnLogout  =  new QPushButton("← Выйти", this);  // Создание объекта
     m_layout->addWidget(m_btnLogout);
 
-    connect(m_btnLogout, &QPushButton::clicked, this, &AdminWidget::onLogoutClicked);
+    connect(m_btnLogout, &QPushButton::clicked, this, &AdminWidget::onLogoutClicked);  // Подключение сигнала
 }
 
 QWidget* AdminWidget::createCourseEditTab() {
-    QWidget* tab  =  new QWidget();
-    QVBoxLayout* layout  =  new QVBoxLayout(tab);
+/*!
+ * @brief Возвращает значение
+ * @return Результат выполнения
+ */
+    QWidget* tab  =  new QWidget();  // Создание объекта
+/*!
+ * @brief Выполняет основную операцию
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    QVBoxLayout* layout  =  new QVBoxLayout(tab);  // Создание объекта
 
-    m_lblHeader  =  new QLabel("Редактор Лекций", tab);
+/*!
+ * @brief Выполняет основную операцию
+ * @param Лекций" Параметр функции
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_lblHeader  =  new QLabel("Редактор Лекций", tab);  // Создание объекта
     QFont font  =  m_lblHeader->font();
     font.setBold(true);
     font.setPointSize(12);
@@ -67,30 +104,61 @@ QWidget* AdminWidget::createCourseEditTab() {
     m_lblHeader->setAlignment(Qt::AlignCenter);
     layout->addWidget(m_lblHeader);
 
-    layout->addWidget(new QLabel("Выберите тему для редактирования:", tab));
-    m_cbTopics  =  new QComboBox(tab);
+    layout->addWidget(new QLabel("Выберите тему для редактирования:", tab));  // Создание объекта
+/*!
+ * @brief Выполняет основную операцию
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_cbTopics  =  new QComboBox(tab);  // Создание объекта
     layout->addWidget(m_cbTopics);
 
-    layout->addWidget(new QLabel("HTML Контент (QTextBrowser совместимый):", tab));
-    m_txtHtmlEditor  =  new QTextEdit(tab);
+    layout->addWidget(new QLabel("HTML Контент (QTextBrowser совместимый):", tab));  // Создание объекта
+/*!
+ * @brief Выполняет основную операцию
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_txtHtmlEditor  =  new QTextEdit(tab);  // Создание объекта
     m_txtHtmlEditor->setAcceptRichText(false);
     layout->addWidget(m_txtHtmlEditor);
 
-    m_btnSave  =  new QPushButton("Сохранить изменения в файл", tab);
+/*!
+ * @brief Выполняет основную операцию
+ * @param файл" Параметр функции
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_btnSave  =  new QPushButton("Сохранить изменения в файл", tab);  // Создание объекта
     layout->addWidget(m_btnSave);
 
-    connect(m_cbTopics, QOverload<int>::of(&QComboBox::currentIndexChanged),
+    connect(m_cbTopics, QOverload<int>::of(&QComboBox::currentIndexChanged),  // Подключение сигнала
             this, &AdminWidget::onTopicChanged);
-    connect(m_btnSave, &QPushButton::clicked, this, &AdminWidget::onSaveClicked);
+    connect(m_btnSave, &QPushButton::clicked, this, &AdminWidget::onSaveClicked);  // Подключение сигнала
 
     return tab;
 }
 
 QWidget* AdminWidget::createStudentStatisticsTab() {
-    QWidget* tab  =  new QWidget();
-    QVBoxLayout* layout  =  new QVBoxLayout(tab);
+/*!
+ * @brief Возвращает значение
+ * @return Результат выполнения
+ */
+    QWidget* tab  =  new QWidget();  // Создание объекта
+/*!
+ * @brief Выполняет основную операцию
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    QVBoxLayout* layout  =  new QVBoxLayout(tab);  // Создание объекта
 
-    QLabel* headerLabel  =  new QLabel("Статистика студентов", tab);
+/*!
+ * @brief Выполняет основную операцию
+ * @param студентов" Параметр функции
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    QLabel* headerLabel  =  new QLabel("Статистика студентов", tab);  // Создание объекта
     QFont headerFont  =  headerLabel->font();
     headerFont.setBold(true);
     headerFont.setPointSize(12);
@@ -98,19 +166,39 @@ QWidget* AdminWidget::createStudentStatisticsTab() {
     headerLabel->setAlignment(Qt::AlignCenter);
     layout->addWidget(headerLabel);
 
-    QHBoxLayout* filterLayout  =  new QHBoxLayout();
-    filterLayout->addWidget(new QLabel("Поиск по имени:", tab));
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
+    QHBoxLayout* filterLayout  =  new QHBoxLayout();  // Создание объекта
+    filterLayout->addWidget(new QLabel("Поиск по имени:", tab));  // Создание объекта
     
-    m_filterEdit  =  new QLineEdit(tab);
+/*!
+ * @brief Выполняет основную операцию
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_filterEdit  =  new QLineEdit(tab);  // Создание объекта
     m_filterEdit->setPlaceholderText("Введите имя студента для поиска...");
     filterLayout->addWidget(m_filterEdit);
     
-    m_btnRefreshStats  =  new QPushButton("🔄 Обновить", tab);
+/*!
+ * @brief Выполняет основную операцию
+ * @param Обновить" Параметр функции
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_btnRefreshStats  =  new QPushButton("🔄 Обновить", tab);  // Создание объекта
     filterLayout->addWidget(m_btnRefreshStats);
     
     layout->addLayout(filterLayout);
 
-    m_statisticsTable  =  new QTableView(tab);
+/*!
+ * @brief Выполняет основную операцию
+ * @param tab Входной параметр
+ * @return Результат выполнения
+ */
+    m_statisticsTable  =  new QTableView(tab);  // Создание объекта
     m_statisticsTable->setAlternatingRowColors(true);
     m_statisticsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     m_statisticsTable->setSortingEnabled(true);
@@ -119,16 +207,26 @@ QWidget* AdminWidget::createStudentStatisticsTab() {
     
     layout->addWidget(m_statisticsTable);
 
-    m_statisticsModel  =  new QSqlQueryModel(this);
-    m_proxyModel  =  new QSortFilterProxyModel(this);
+/*!
+ * @brief Выполняет основную операцию
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_statisticsModel  =  new QSqlQueryModel(this);  // Создание объекта
+/*!
+ * @brief Выполняет основную операцию
+ * @param this Входной параметр
+ * @return Результат выполнения
+ */
+    m_proxyModel  =  new QSortFilterProxyModel(this);  // Создание объекта
     m_proxyModel->setSourceModel(m_statisticsModel);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_proxyModel->setFilterKeyColumn(1); 
     
     m_statisticsTable->setModel(m_proxyModel);
 
-    connect(m_filterEdit, &QLineEdit::textChanged, this, &AdminWidget::onFilterChanged);
-    connect(m_btnRefreshStats, &QPushButton::clicked, this, &AdminWidget::onRefreshStatistics);
+    connect(m_filterEdit, &QLineEdit::textChanged, this, &AdminWidget::onFilterChanged);  // Подключение сигнала
+    connect(m_btnRefreshStats, &QPushButton::clicked, this, &AdminWidget::onRefreshStatistics);  // Подключение сигнала
 
     updateStudentStatistics();
 
@@ -141,20 +239,20 @@ void AdminWidget::loadTopics() {
     m_cbTopics->blockSignals(true);
     m_cbTopics->clear();
 
-    for (const Topic& topic : m_course->topics) {
+    for (const Topic& topic : m_course->topics) {  // Цикл обработки данных
         m_cbTopics->addItem(topic.title);
     }
 
     m_cbTopics->blockSignals(false);
 
-    if (m_cbTopics->count() > 0) {
+    if (m_cbTopics->count() > 0) {  // Проверка условия
         m_cbTopics->setCurrentIndex(0);
         onTopicChanged(0);
     }
 }
 
 void AdminWidget::onTopicChanged(int index) {
-    if (!m_course || index < 0 || index  >=  m_course->topics.size()) {
+    if (!m_course || index < 0 || index  >=  m_course->topics.size()) {  // Проверка условия
         m_txtHtmlEditor->clear();
         return;
     }
@@ -166,14 +264,14 @@ void AdminWidget::onSaveClicked() {
     if (!m_course) return;
 
     int index  =  m_cbTopics->currentIndex();
-    if (index < 0 || index  >=  m_course->topics.size()) {
+    if (index < 0 || index  >=  m_course->topics.size()) {  // Проверка условия
         QMessageBox::warning(this, "Ошибка", "Нет выбранной темы для сохранения.");
         return;
     }
 
     try {
         QString newContent  =  m_txtHtmlEditor->toPlainText();
-        if (newContent.trimmed().isEmpty()) {
+        if (newContent.trimmed().isEmpty()) {  // Проверка условия
             QMessageBox::warning(this, "Предупреждение", "Текст лекции пуст!");
             return;
         }
@@ -189,14 +287,18 @@ void AdminWidget::onSaveClicked() {
 }
 
 void AdminWidget::onLogoutClicked() {
-    if (m_txtHtmlEditor) {
+    if (m_txtHtmlEditor) {  // Проверка условия
         m_txtHtmlEditor->clear();
     }
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     emit backRequested();
 }
 
 void AdminWidget::onFilterChanged() {
-    if (m_proxyModel) {
+    if (m_proxyModel) {  // Проверка условия
         m_proxyModel->setFilterFixedString(m_filterEdit->text());
     }
 }
@@ -207,7 +309,7 @@ void AdminWidget::onRefreshStatistics() {
 }
 
 void AdminWidget::updateStudentStatistics() {
-    if (!DatabaseManager::instance().isConnected()) {
+    if (!DatabaseManager::instance().isConnected()) {  // Проверка условия
         qWarning() << "Database not connected, cannot update student statistics";
         return;
     }
@@ -229,8 +331,8 @@ void AdminWidget::updateStudentStatistics() {
         "GROUP BY u.id, u.full_name, u.login, p.last_topic_id "
         "ORDER BY u.full_name";
 
-    QSqlQuery query(DatabaseManager::instance().database());
-    if (!query.exec(queryString)) {
+    QSqlQuery query(DatabaseManager::instance().database());  // Работа с базой данных
+    if (!query.exec(queryString)) {  // Проверка условия
         qCritical() << "Failed to fetch student statistics:" << query.lastError().text();
         QMessageBox::warning(this, "Ошибка", "Не удалось загрузить статистику студентов.");
         return;
@@ -238,13 +340,13 @@ void AdminWidget::updateStudentStatistics() {
 
     m_statisticsModel->setQuery(query);
     
-    if (m_statisticsModel->lastError().isValid()) {
+    if (m_statisticsModel->lastError().isValid()) {  // Проверка условия
         qCritical() << "Model error:" << m_statisticsModel->lastError().text();
         QMessageBox::warning(this, "Ошибка", "Ошибка при отображении статистики.");
         return;
     }
 
-    if (m_proxyModel) {
+    if (m_proxyModel) {  // Проверка условия
         m_proxyModel->setFilterKeyColumn(1); 
         m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     }
@@ -259,7 +361,7 @@ void AdminWidget::setupAccessRights() {
     
     bool isAdmin  =  m_currentUser.isValid() && m_currentUser.isAdmin();
     
-    if (m_tabWidget->count() > 1) {
+    if (m_tabWidget->count() > 1) {  // Проверка условия
         m_tabWidget->setTabEnabled(1, isAdmin); 
         if (!isAdmin) {
             m_tabWidget->setCurrentIndex(0); 

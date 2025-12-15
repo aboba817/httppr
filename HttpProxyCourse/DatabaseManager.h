@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл DatabaseManager.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -12,45 +8,36 @@
 #include <QMutex>
 #include "DatabaseConfig.h"
 
-/**
- * Менеджер базы данных, обеспечивающий подключение и работу с PostgreSQL.
- * Реализует паттерн Singleton для обеспечения единственного подключения к БД.
+/*!
+ * @brief Реализует функциональность класса DatabaseManager
  */
 class DatabaseManager {
 public:
-    /**
-     * Возвращает единственный экземпляр класса (Singleton).
-     *
-     * @return Ссылка на экземпляр DatabaseManager.
-     */
+    
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     static DatabaseManager& instance();
 
-    /**
-     * Устанавливает соединение с базой данных PostgreSQL.
-     *
-     * @return true если подключение установлено успешно, false в противном случае.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     bool connectDb();
 
-    /**
-     * Инициализирует схему базы данных, создавая необходимые таблицы.
-     *
-     * @return true если инициализация прошла успешно, false в противном случае.
-     */
+/*!
+ * @brief Инициализирует компонент
+ * @return Результат выполнения
+ */
     bool initSchema();
 
-    /**
-     * Проверяет состояние подключения к базе данных.
-     *
-     * @return true если подключение активно, false в противном случае.
-     */
     bool isConnected() const;
 
-    /**
-     * Возвращает ссылку на объект подключения к базе данных.
-     *
-     * @return Ссылка на QSqlDatabase.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     QSqlDatabase& database();
 
     ~DatabaseManager();
@@ -62,8 +49,16 @@ private:
     DatabaseManager(const DatabaseManager&)  =  delete;
     DatabaseManager& operator = (const DatabaseManager&)  =  delete;
 
+/*!
+ * @brief Создает объект
+ * @return Результат выполнения
+ */
     bool createTables();
 
+/*!
+ * @brief Выполняет основную операцию
+ * @return Результат выполнения
+ */
     bool seedData();
 
     QString calculateSha256(const QString& input) const;

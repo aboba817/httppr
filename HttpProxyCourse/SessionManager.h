@@ -1,7 +1,3 @@
-/**
- * Заголовочный файл SessionManager.h.
- * Содержит объявления классов и функций для системы HTTP Proxy Course.
- */
 
 #pragma once
 
@@ -11,14 +7,17 @@
 #include <QList>
 #include <QDateTime>
 
-/**
- * Менеджер сессий пользователей для отслеживания активных подключений.
+/*!
+ * @brief Определяет перечисление SessionManager
  */
 class SessionManager {
 public:
     
     static const int MAX_ERRORS  =  3;
     
+/*!
+ * @brief Определяет перечисление SubmitResult
+ */
     enum class SubmitResult {
         Correct,        
         Wrong,          
@@ -29,41 +28,72 @@ public:
 
     SessionManager();
 
+/*!
+ * @brief Устанавливает значение
+ * @param user Входной параметр
+ */
     void setCurrentUser(const User& user);
 
     const User& getCurrentUser() const;
 
     bool hasUser() const;
 
-    /**
-     * Очищает данные или состояние.
-     */
+/*!
+ * @brief Выполняет основную операцию
+ */
     void clearSession();
 
+/*!
+ * @brief Загружает данные
+ * @param filePath Входной параметр
+ */
     void loadCourse(const QString& filePath);
 
     bool isCourseLoaded() const;
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param topicIndex Входной параметр
+ */
     void startTopic(int topicIndex);
 
     const Course& getCourse() const;
 
+/*!
+ * @brief Возвращает значение
+ * @return Результат выполнения
+ */
     Course& getMutableCourse();
 
+/*!
+ * @brief Возвращает значение
+ * @return Результат выполнения
+ */
     Topic* getCurrentTopic();
 
+/*!
+ * @brief Возвращает значение
+ * @return Результат выполнения
+ */
     Question* getCurrentQuestion();
 
+/*!
+ * @brief Выполняет основную операцию
+ * @param answerIndex Входной параметр
+ * @return Результат выполнения
+ */
     SubmitResult submitAnswer(int answerIndex);
 
-    /**
-     * Сохраняет данные в хранилище.
-     */
+/*!
+ * @brief Сохраняет данные
+ * @return Результат выполнения
+ */
     bool saveProgress();
 
-    /**
-     * Загружает данные из хранилища.
-     */
+/*!
+ * @brief Загружает данные
+ * @return Результат выполнения
+ */
     bool loadProgress();
 
 private:
